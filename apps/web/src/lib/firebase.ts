@@ -36,4 +36,4 @@ if (typeof window !== "undefined") {
   });
 }
 
-export { app, auth, db, storage, analytics, adminAuth };
+export { app, auth, db, storage, analytics, adminAuth, firebaseConfig };

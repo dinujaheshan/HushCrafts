@@ -87,18 +87,18 @@ function mapDocToProduct(docSnap: QueryDocumentSnapshot<DocumentData>): Product 
 export async function getProducts(params?: { categoryId?: string; limitCount?: number }) {
   try {
     let q = query(collection(db, 'products'), where('status', '==', 'published'));
-    
+
     if (params?.categoryId) {
       q = query(q, where('categoryIds', 'array-contains', params.categoryId));
     }
-    
+
     if (params?.limitCount) {
       q = query(q, limit(params.limitCount));
     }
 
     const snapshot = await getDocs(q);
     const products = snapshot.docs.map(mapDocToProduct);
-    
+
     return { success: true as const, data: { products, hasMore: false, count: products.length } };
   } catch (error: unknown) {
     console.error("Error fetching products:", error);
@@ -115,7 +115,7 @@ export async function getFeaturedProducts() {
       where('isBestSeller', '==', true),
       limit(8)
     );
-    
+
     // New arrivals (using simple limit for now, ideally ordered by createdAt)
     const newArrivalsQuery = query(
       collection(db, 'products'),
@@ -145,11 +145,11 @@ export async function getProduct(id: string) {
   try {
     const docRef = doc(db, 'products', id);
     const docSnap = await getDoc(docRef);
-    
+
     if (!docSnap.exists()) {
       return { success: false as const, error: { code: 'NOT_FOUND', message: 'Product not found' } };
     }
-    
+
     return {
       success: true as const,
       data: mapDocToProduct(docSnap as QueryDocumentSnapshot<DocumentData>)
@@ -171,7 +171,7 @@ export async function getCategories() {
       image: doc.data().image || '',
       productCount: doc.data().productCount || 0
     }));
-    
+
     return { success: true as const, data: { categories } };
   } catch (error: unknown) {
     console.error("Error fetching categories:", error);
@@ -213,10 +213,10 @@ export async function submitCheckout(payload: {
     return res;
   } catch (err) {
     console.warn("Backend Cloud Function API is offline. Simulating checkout on client-side...", err);
-    
+
     // Generate realistic simulated checkout response for local testing
     const mockOrderId = `HC-${new Date().toISOString().slice(0, 10).replace(/-/g, '')}-${Math.floor(1000 + Math.random() * 9000)}`;
-    
+
     // Dynamically calculate the exact price of items in the cart
     let subtotal = 0;
     try {
@@ -244,7 +244,7 @@ export async function submitCheckout(payload: {
 
     const shippingFee = (payload.shippingAddress.district === 'Colombo' || payload.shippingAddress.district === 'Gampaha') ? 350 : 500;
     const totalAmount = (subtotal + shippingFee).toFixed(2);
-    
+
     // Calculate authentic PayHere MD5 signature hash on client-side
     const PAYHERE_MERCHANT_ID = process.env.NEXT_PUBLIC_PAYHERE_MERCHANT_ID || "";
     // Use the merchant secret from environment variables
@@ -263,7 +263,7 @@ export async function submitCheckout(payload: {
     console.log("Concatenated String to MD5:", hashStr);
     console.log("Calculated Final MD5 Hash:", finalHash);
     console.log("======================================");
-    
+
     return {
       success: true,
       data: {
@@ -302,11 +302,11 @@ function md5(str: string): string {
   ];
   const r = [
     7, 12, 17, 22, 7, 12, 17, 22, 7, 12, 17, 22, 7, 12, 17, 22,
-    5,  9, 14, 20, 5,  9, 14, 20, 5,  9, 14, 20, 5,  9, 14, 20,
+    5, 9, 14, 20, 5, 9, 14, 20, 5, 9, 14, 20, 5, 9, 14, 20,
     4, 11, 16, 23, 4, 11, 16, 23, 4, 11, 16, 23, 4, 11, 16, 23,
     6, 10, 15, 21, 6, 10, 15, 21, 6, 10, 15, 21, 6, 10, 15, 21
   ];
-  
+
   const words: number[] = [];
   const s = str + "\x80";
   const len = s.length;

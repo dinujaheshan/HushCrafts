@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { db } from '@/lib/firebase';
+import { db, firebaseConfig } from '@/lib/firebase';
 import { collection, doc, getDocs, setDoc, updateDoc } from 'firebase/firestore';
 import { useAdminAuthStore } from '@/store/adminAuthStore';
 import {
@@ -10,15 +10,6 @@ import {
 } from '@/components/MaterialIcons';
 import { initializeApp, getApps } from 'firebase/app';
 import { getAuth, createUserWithEmailAndPassword, signOut } from 'firebase/auth';
-
-const firebaseConfig = {
-  apiKey: "AIzaSyCXMjEofW5wmFbcbfQJVojc7F7boQJz7_4",
-  authDomain: "hush-craft.firebaseapp.com",
-  projectId: "hush-craft",
-  storageBucket: "hush-craft.firebasestorage.app",
-  messagingSenderId: "533816937760",
-  appId: "1:533816937760:web:1ed17c3eea1bea515c9b45"
-};
 
 export default function AdminSettingsPage() {
   const currentAdmin = useAdminAuthStore(s => s.admin);
