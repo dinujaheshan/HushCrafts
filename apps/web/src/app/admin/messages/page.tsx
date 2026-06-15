@@ -28,7 +28,7 @@ export default function AdminMessagesPage() {
     setLoading(true);
     try {
       const snapshot = await getDocs(collection(db, 'contact_messages'));
-      const list = snapshot.docs.map(doc => {
+      const list = snapshot.docs.map((doc): any => {
         const data = doc.data();
         let messageDate = 'Recent';
         if (data.createdAt) {
