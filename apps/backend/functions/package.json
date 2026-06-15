@@ -1,0 +1,36 @@
+{
+  "name": "hush-craft-functions",
+  "scripts": {
+    "lint": "tsc --noEmit",
+    "build": "tsc",
+    "build:watch": "tsc --watch",
+    "serve": "npm run build && firebase emulators:start --only functions",
+    "shell": "npm run build && firebase functions:shell",
+    "start": "npm run shell",
+    "deploy": "firebase deploy --only functions",
+    "logs": "firebase functions:log"
+  },
+  "engines": {
+    "node": "20"
+  },
+  "main": "lib/index.js",
+  "dependencies": {
+    "@hush-craft/shared-types": "*",
+    "@hush-craft/shared-utils": "*",
+    "cors": "^2.8.5",
+    "express": "^4.19.2",
+    "firebase-admin": "^12.1.0",
+    "firebase-functions": "^4.9.0",
+    "nodemailer": "^9.0.0",
+    "resend": "^3.2.0"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/express": "^4.17.21",
+    "@types/node": "^20.12.7",
+    "@types/nodemailer": "^8.0.1",
+    "firebase-functions-test": "^3.1.0",
+    "typescript": "^5.4.5"
+  },
+  "private": true
+}

@@ -1,0 +1,30 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    // Helpers
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    function isAdmin() {
+      return isAuthenticated() && request.auth.token.role != null;
+    }
+    
+    // Product images are publically readable, writable only by admins
+    match /products/{allPaths=**} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+    
+    // User upload directory for customer support / review media
+    match /customers/{customerId}/{allPaths=**} {
+      allow read: if isAuthenticated() && (request.auth.uid == customerId || isAdmin());
+      allow write: if isAuthenticated() && request.auth.uid == customerId;
+    }
+    
+    // Dynamic media library uploads
+    match /media/{allPaths=**} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+  }
+}

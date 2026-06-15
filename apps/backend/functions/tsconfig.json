@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "noImplicitReturns": true,
+    "noUnusedLocals": true,
+    "outDir": "lib",
+    "sourceMap": true,
+    "strict": true,
+    "target": "es2022",
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "baseUrl": ".",
+    "paths": {
+      "@hush-craft/shared-types": ["../../../packages/shared-types/lib/index.d.ts"],
+      "@hush-craft/shared-utils": ["../../../packages/shared-utils/lib/index.d.ts"]
+    }
+  },
+  "compileOnSave": true,
+  "include": ["src"]
+}
