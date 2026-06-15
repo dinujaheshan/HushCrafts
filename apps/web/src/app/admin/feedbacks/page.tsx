@@ -29,7 +29,7 @@ export default function AdminFeedbacksPage() {
       const productsList = productsSnap.docs.map(doc => ({ id: doc.id, ...doc.data() as any }));
       setProducts(productsList);
 
-      const reviewsList = reviewsSnap.docs.map(doc => {
+      const reviewsList = reviewsSnap.docs.map((doc): any => {
         const data = doc.data();
         const matchedProduct = productsList.find(p => p.id === data.productId);
         

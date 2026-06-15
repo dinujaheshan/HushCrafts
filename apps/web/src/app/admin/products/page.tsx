@@ -52,10 +52,10 @@ export default function AdminProductsPage() {
       const prodSnapshot = await getDocs(collection(db, 'products'));
       const catSnapshot = await getDocs(collection(db, 'categories'));
 
-      const catList = catSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      const catList = catSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() as any }));
       setCategories(catList);
 
-      const prodList = prodSnapshot.docs.map(doc => {
+      const prodList = prodSnapshot.docs.map((doc): any => {
         const data = doc.data();
         // Calculate total stock from variants
         const variants = data.variants || [];

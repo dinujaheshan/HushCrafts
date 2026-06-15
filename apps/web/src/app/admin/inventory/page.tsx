@@ -33,7 +33,7 @@ export default function AdminInventoryPage() {
     setLoading(true);
     try {
       const querySnapshot = await getDocs(collection(db, 'products'));
-      const prods = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      const prods = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() as any }));
       setProducts(prods);
 
       const flattenedInventory: any[] = [];

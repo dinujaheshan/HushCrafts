@@ -40,7 +40,7 @@ export default function AdminOrdersPage() {
     const fetchOrders = async () => {
       try {
         const querySnapshot = await getDocs(collection(db, 'orders'));
-        const list = querySnapshot.docs.map(doc => {
+        const list = querySnapshot.docs.map((doc): any => {
           const data = doc.data();
           return {
             id: doc.id,
