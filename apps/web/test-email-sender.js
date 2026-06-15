@@ -1,12 +1,13 @@
+require('dotenv').config({ path: '.env.local' });
 const nodemailer = require('nodemailer');
 
-const resendApiKey = 're_57dFSYNL_MJHTnsDLM6rHujDZ922yArZT';
-const SMTP_HOST = 'smtp.gmail.com';
+const resendApiKey = process.env.RESEND_API_KEY || '';
+const SMTP_HOST = process.env.SMTP_HOST || 'smtp.gmail.com';
 const SMTP_PORT = 465;
-const SMTP_USER = 'hushcraftslk@gmail.com';
-const SMTP_PASS = 'kkyj jmrg qekd dpll';
-const SENDER_EMAIL = 'Hush Craft <noreply@hushcraft.lk>';
-const TEST_TO = 'hushcraftslk@gmail.com'; // Send to self for testing
+const SMTP_USER = process.env.SMTP_USER || '';
+const SMTP_PASS = process.env.SMTP_PASS || '';
+const SENDER_EMAIL = process.env.SENDER_EMAIL || 'Hush Craft <noreply@hushcraft.lk>';
+const TEST_TO = process.env.SMTP_USER || ''; // Send to self for testing
 
 async function testResend() {
   console.log("Testing Resend API...");

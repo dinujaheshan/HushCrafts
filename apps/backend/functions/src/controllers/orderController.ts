@@ -5,8 +5,8 @@ import { db } from '../config/firebaseAdmin';
 import { z } from 'zod';
 import * as crypto from 'crypto';
 
-export const PAYHERE_MERCHANT_ID = '1224797';
-export const PAYHERE_MERCHANT_SECRET = 'MzQ4NDU0NTAyNjI2NTQwNDA0Mjc5MDU1NzEzNjM0ODk4NDc2MzA=';
+export const PAYHERE_MERCHANT_ID = process.env.PAYHERE_MERCHANT_ID || '';
+export const PAYHERE_MERCHANT_SECRET = process.env.PAYHERE_MERCHANT_SECRET || '';
 
 const OrderListQuerySchema = z.object({
   status: z.enum(['pending','confirmed','processing','packed','dispatched','delivered','completed','cancelled','returned','refunded']).optional(),

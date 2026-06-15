@@ -246,9 +246,9 @@ export async function submitCheckout(payload: {
     const totalAmount = (subtotal + shippingFee).toFixed(2);
     
     // Calculate authentic PayHere MD5 signature hash on client-side
-    const PAYHERE_MERCHANT_ID = "1224797";
-    // Use the literal base64 merchant secret string as shown in the PayHere Sandbox portal
-    const PAYHERE_MERCHANT_SECRET = "MzQ4NDU0NTAyNjI2NTQwNDA0Mjc5MDU1NzEzNjM0ODk4NDc2MzA=";
+    const PAYHERE_MERCHANT_ID = process.env.NEXT_PUBLIC_PAYHERE_MERCHANT_ID || "";
+    // Use the merchant secret from environment variables
+    const PAYHERE_MERCHANT_SECRET = process.env.NEXT_PUBLIC_PAYHERE_MERCHANT_SECRET || "";
     const merchantSecretHash = md5(PAYHERE_MERCHANT_SECRET);
     const hashStr = PAYHERE_MERCHANT_ID + mockOrderId + totalAmount + "LKR" + merchantSecretHash;
     const finalHash = md5(hashStr);

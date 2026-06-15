@@ -8,13 +8,13 @@ const nodemailer_1 = __importDefault(require("nodemailer"));
 const resend_1 = require("resend");
 const firebaseAdmin_1 = require("../config/firebaseAdmin");
 // Read key from environments (or fallback for local emulators/testing)
-const resendApiKey = process.env.RESEND_API_KEY || 're_57dFSYNL_MJHTnsDLM6rHujDZ922yArZT';
+const resendApiKey = process.env.RESEND_API_KEY || '';
 const resend = new resend_1.Resend(resendApiKey);
 // SMTP configuration (e.g. Gmail SMTP using App Password)
 const SMTP_HOST = process.env.SMTP_HOST || 'smtp.gmail.com';
 const SMTP_PORT = parseInt(process.env.SMTP_PORT || '465', 10);
-const SMTP_USER = process.env.SMTP_USER || 'hushcraftslk@gmail.com';
-const SMTP_PASS = process.env.SMTP_PASS || 'kkyj jmrg qekd dpll'; // Configured with your App Password!
+const SMTP_USER = process.env.SMTP_USER || '';
+const SMTP_PASS = process.env.SMTP_PASS || ''; // Configured with your App Password!
 // NOTE: Free Resend accounts require a verified domain. Until hushcraft.lk is verified,
 // use onboarding@resend.dev (Resend's default from address that always works on free tier).
 // Once the domain is verified in the Resend dashboard, change to: Hush Craft <noreply@hushcraft.lk>

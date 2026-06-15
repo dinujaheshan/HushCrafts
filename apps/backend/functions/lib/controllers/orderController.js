@@ -39,8 +39,8 @@ const shared_utils_1 = require("@hush-craft/shared-utils");
 const firebaseAdmin_1 = require("../config/firebaseAdmin");
 const zod_1 = require("zod");
 const crypto = __importStar(require("crypto"));
-exports.PAYHERE_MERCHANT_ID = '1224797';
-exports.PAYHERE_MERCHANT_SECRET = 'MzQ4NDU0NTAyNjI2NTQwNDA0Mjc5MDU1NzEzNjM0ODk4NDc2MzA=';
+exports.PAYHERE_MERCHANT_ID = process.env.PAYHERE_MERCHANT_ID || '';
+exports.PAYHERE_MERCHANT_SECRET = process.env.PAYHERE_MERCHANT_SECRET || '';
 const OrderListQuerySchema = zod_1.z.object({
     status: zod_1.z.enum(['pending', 'confirmed', 'processing', 'packed', 'dispatched', 'delivered', 'completed', 'cancelled', 'returned', 'refunded']).optional(),
     limit: zod_1.z.coerce.number().int().min(1).max(100).optional().default(20),

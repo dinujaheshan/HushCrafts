@@ -1,11 +1,11 @@
 import { NextResponse } from 'next/server';
 import nodemailer from 'nodemailer';
 
-const resendApiKey = process.env.RESEND_API_KEY || 're_57dFSYNL_MJHTnsDLM6rHujDZ922yArZT';
+const resendApiKey = process.env.RESEND_API_KEY || '';
 const SMTP_HOST = process.env.SMTP_HOST || 'smtp.gmail.com';
 const SMTP_PORT = parseInt(process.env.SMTP_PORT || '465', 10);
-const SMTP_USER = process.env.SMTP_USER || 'hushcraftslk@gmail.com';
-const SMTP_PASS = process.env.SMTP_PASS || 'kkyj jmrg qekd dpll';
+const SMTP_USER = process.env.SMTP_USER || '';
+const SMTP_PASS = process.env.SMTP_PASS || '';
 const SENDER_EMAIL = process.env.SENDER_EMAIL || 'Hush Craft <noreply@hushcraft.lk>';
 
 export async function POST(req: Request) {
