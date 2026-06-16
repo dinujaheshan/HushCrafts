@@ -1,17 +1,6 @@
-import { initializeApp } from "firebase/app";
-import { getFirestore, doc, setDoc } from "firebase/firestore";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyCXMjEofW5wmFbcbfQJVojc7F7boQJz7_4",
-  authDomain: "hush-crafts.firebaseapp.com",
-  projectId: "hush-crafts",
-  storageBucket: "hush-crafts.firebasestorage.app",
-  messagingSenderId: "533816937760",
-  appId: "1:533816937760:web:1ed17c3eea1bea515c9b45"
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+import { NextResponse } from 'next/server';
+import { db } from '@/lib/firebase';
+import { doc, setDoc } from 'firebase/firestore';
 
 const MOCK_DB = {
   products: [
@@ -118,7 +107,7 @@ const MOCK_DB = {
       description: 'Bring joy to your steps with the Dedunu slides. Adorned with multicolored floral accents to brighten any casual outfit.',
       basePrice: 3250,
       categoryIds: ['c3'],
-      images: [decodeURIComponent('https://res.cloudinary.com/don5ltush/image/upload/v1781510075/දේදුනු_zjxfvf.jpg')],
+      images: [decodeURIComponent('https://res.cloudinary.com/don5ltush/image/upload/v1781510075/%E0%B6%AF%E0%B7%9A%E0%B6%AF%E0%B7%94%E0%B6%B1%E0%B7%94_zjxfvf.jpg')],
       status: 'published',
       isBestSeller: true,
       isFeatured: true,
@@ -343,8 +332,8 @@ const MOCK_DB = {
   ]
 };
 
-async function seed() {
-  console.log("Starting DB seeding...");
+export async function GET() {
+  console.log("Starting DB seeding via API route...");
   try {
     for (const cat of MOCK_DB.categories) {
       await setDoc(doc(db, "categories", cat.id), cat);
@@ -363,12 +352,9 @@ async function seed() {
       await setDoc(doc(db, "products", prod.id), pData);
       console.log("Seeded product:", prod.name);
     }
-    console.log("Database seeded successfully!");
-    process.exit(0);
-  } catch (error) {
-    console.error("Error seeding database:", error);
-    process.exit(1);
+    return NextResponse.json({ success: true, message: "Database seeded successfully with 20 products!" });
+  } catch (error: any) {
+    console.error("Error seeding database via API route:", error);
+    return NextResponse.json({ success: false, error: error.message || error }, { status: 500 });
   }
 }
-
-seed();

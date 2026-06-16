@@ -36,8 +36,8 @@ async function getHomeData() {
   ]);
 
   return {
-    bestSellers: featuredRes.success ? featuredRes.data.bestSellers.slice(0, 4) : [],
-    newArrivals: featuredRes.success ? featuredRes.data.newArrivals.slice(0, 4) : [],
+    bestSellers: featuredRes.success ? featuredRes.data.bestSellers.slice(0, 12) : [],
+    newArrivals: featuredRes.success ? featuredRes.data.newArrivals.slice(0, 6) : [],
     categories: categoriesRes.success ? categoriesRes.data.categories.slice(0, 4) : []
   };
 }

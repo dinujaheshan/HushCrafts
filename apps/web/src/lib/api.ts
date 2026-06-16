@@ -113,7 +113,7 @@ export async function getFeaturedProducts() {
       collection(db, 'products'),
       where('status', '==', 'published'),
       where('isBestSeller', '==', true),
-      limit(8)
+      limit(12)
     );
 
     // New arrivals (using simple limit for now, ideally ordered by createdAt)
