@@ -6,12 +6,13 @@ import { ChevronDown } from './MaterialIcons';
 export default function SortDropdown({ initialSort }: { initialSort?: string }) {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const currentSort = initialSort || 'newest';
 
   return (
-    <div className="relative hidden md:block">
+    <div className="relative">
       <select
         className="appearance-none pl-4 pr-10 py-2.5 text-sm border border-border rounded-xl bg-background text-foreground focus:outline-none focus:border-primary cursor-pointer"
-        defaultValue={initialSort || 'newest'}
+        value={currentSort}
         onChange={(e) => {
           const params = new URLSearchParams(searchParams.toString());
           params.set('sort', e.target.value);

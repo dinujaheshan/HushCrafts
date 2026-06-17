@@ -10,7 +10,7 @@ const MOCK_DB = {
       summary: 'Elegant slide slippers featuring beautiful pink rose fabric flower motifs.',
       description: 'Step into grace and comfort with the Rosa Malee slides. Handcrafted with delicate pink rose fabric flower motifs set on comfortable, padded straps.',
       basePrice: 2950,
-      categoryIds: ['c1'],
+      categoryIds: ['c1', 'c4', 'c5'],
       images: [decodeURIComponent('https://res.cloudinary.com/don5ltush/image/upload/v1781510078/%E0%B6%BB%E0%B7%9D%E0%B7%83_%E0%B6%B8%E0%B6%BD%E0%B7%93_dv9qpi.jpg')],
       status: 'published',
       isBestSeller: true,
@@ -18,7 +18,7 @@ const MOCK_DB = {
       totalSold: 120,
       averageRating: 4.8,
       reviewCount: 45,
-      seo: { title: 'Rosa Malee Slipper - Hush Craft', description: 'Handcrafted rose flower slide slippers', keywords: ['rosa malee', 'slippers', 'hush craft'] }
+      seo: { title: 'Rosa Malee Slipper - Hush Crafts', description: 'Handcrafted rose flower slide slippers', keywords: ['rosa malee', 'slippers', 'Hush Crafts'] }
     },
     {
       id: 'dam-lily-malee',
@@ -26,7 +26,7 @@ const MOCK_DB = {
       summary: 'Stunning deep purple lily flower accents set on elegant black straps.',
       description: 'Elegant and bold, the Dam Lily Malee slippers feature deep purple fabric lilies with rhinestone centers, mounted on high-quality black straps.',
       basePrice: 3100,
-      categoryIds: ['c2'],
+      categoryIds: ['c2', 'c5'],
       images: [decodeURIComponent('https://res.cloudinary.com/don5ltush/image/upload/v1781510078/%E0%B6%AF%E0%B6%B8%E0%B7%8A_%E0%B6%BD%E0%B7%92%E0%B6%BD%E0%B7%93_%E0%B6%B8%E0%B6%BD%E0%B7%92_biadon.jpg')],
       status: 'published',
       isBestSeller: true,
@@ -34,7 +34,7 @@ const MOCK_DB = {
       totalSold: 85,
       averageRating: 4.9,
       reviewCount: 32,
-      seo: { title: 'Dam Lily Malee - Hush Craft', description: 'Purple lily flower mules', keywords: ['purple lily', 'mules', 'slippers'] }
+      seo: { title: 'Dam Lily Malee - Hush Crafts', description: 'Purple lily flower mules', keywords: ['purple lily', 'mules', 'slippers'] }
     },
     {
       id: 'nil-samanalee',
@@ -50,7 +50,7 @@ const MOCK_DB = {
       totalSold: 50,
       averageRating: 4.7,
       reviewCount: 18,
-      seo: { title: 'Nil Samanalee Sandals - Hush Craft', description: 'Blue butterfly flat sandals', keywords: ['blue butterfly', 'sandals', 'samanalee'] }
+      seo: { title: 'Nil Samanalee Sandals - Hush Crafts', description: 'Blue butterfly flat sandals', keywords: ['blue butterfly', 'sandals', 'samanalee'] }
     },
     {
       id: 'sudu-malee',
@@ -58,7 +58,7 @@ const MOCK_DB = {
       summary: 'Pure white floral slides adorned with layered fabric blossoms.',
       description: 'A clean, timeless look. The Sudu Malee slides feature stunning layered white jasmine blossoms on a soft white strap for a clean and elegant finish.',
       basePrice: 2750,
-      categoryIds: ['c1'],
+      categoryIds: ['c1', 'c4', 'c5'],
       images: [decodeURIComponent('https://res.cloudinary.com/don5ltush/image/upload/v1781510077/%E0%B7%83%E0%B7%94%E0%B6%AF%E0%B7%94_%E0%B6%B8%E0%B6%BD%E0%B7%93_ze5io3.jpg')],
       status: 'published',
       isBestSeller: true,
@@ -66,7 +66,7 @@ const MOCK_DB = {
       totalSold: 210,
       averageRating: 5.0,
       reviewCount: 88,
-      seo: { title: 'Sudu Malee Slipper - Hush Craft', description: 'Pure white floral slipper slides', keywords: ['white jasmine', 'floral slides', 'sudu malee'] }
+      seo: { title: 'Sudu Malee Slipper - Hush Crafts', description: 'Pure white floral slipper slides', keywords: ['white jasmine', 'floral slides', 'sudu malee'] }
     },
     {
       id: 'rathu-malee',
@@ -74,7 +74,7 @@ const MOCK_DB = {
       summary: 'Vibrant red flat slide sandals with large red fabric flowers.',
       description: 'Make a bold statement with our Rathu Malee slides. Decorated with large, vibrant red fabric flower petals on a comfortable gloss-red base.',
       basePrice: 2850,
-      categoryIds: ['c1'],
+      categoryIds: ['c1', 'c4', 'c5'],
       images: [decodeURIComponent('https://res.cloudinary.com/don5ltush/image/upload/v1781510076/%E0%B6%BB%E0%B6%AD%E0%B7%94_%E0%B6%B8%E0%B6%BD%E0%B7%93_%EF%B8%8F_xdobzl.jpg')],
       status: 'published',
       isBestSeller: true,
@@ -82,7 +82,7 @@ const MOCK_DB = {
       totalSold: 150,
       averageRating: 4.8,
       reviewCount: 62,
-      seo: { title: 'Rathu Malee - Hush Craft', description: 'Vibrant red flat slide sandals', keywords: ['red sandals', 'floral slides', 'rathu malee'] }
+      seo: { title: 'Rathu Malee - Hush Crafts', description: 'Vibrant red flat slide sandals', keywords: ['red sandals', 'floral slides', 'rathu malee'] }
     },
     {
       id: 'lily-malee',
@@ -90,7 +90,7 @@ const MOCK_DB = {
       summary: 'Delicate lily design slides combining white and pink highlights.',
       description: 'Beautifully crafted with delicate pink and white fabric lilies. The Lily Malee sandals offer light, summery vibes with soft underfoot cushioning.',
       basePrice: 2990,
-      categoryIds: ['c3'],
+      categoryIds: ['c3', 'c5'],
       images: [decodeURIComponent('https://res.cloudinary.com/don5ltush/image/upload/v1781510076/%E0%B6%BD%E0%B7%92%E0%B6%BD%E0%B7%93_%E0%B6%B8%E0%B6%BD%E0%B7%92_faw1wj.jpg')],
       status: 'published',
       isBestSeller: false,
@@ -98,7 +98,7 @@ const MOCK_DB = {
       totalSold: 42,
       averageRating: 4.6,
       reviewCount: 15,
-      seo: { title: 'Lily Malee - Hush Craft', description: 'Pink and white lily sandals', keywords: ['lily', 'sandals', 'floral'] }
+      seo: { title: 'Lily Malee - Hush Crafts', description: 'Pink and white lily sandals', keywords: ['lily', 'sandals', 'floral'] }
     },
     {
       id: 'dedunu-rainbow',
@@ -106,7 +106,7 @@ const MOCK_DB = {
       summary: 'Vibrant multicolored floral slides featuring the hues of a rainbow.',
       description: 'Bring joy to your steps with the Dedunu slides. Adorned with multicolored floral accents to brighten any casual outfit.',
       basePrice: 3250,
-      categoryIds: ['c3'],
+      categoryIds: ['c3', 'c4'],
       images: [decodeURIComponent('https://res.cloudinary.com/don5ltush/image/upload/v1781510075/%E0%B6%AF%E0%B7%9A%E0%B6%AF%E0%B7%94%E0%B6%B1%E0%B7%94_zjxfvf.jpg')],
       status: 'published',
       isBestSeller: true,
@@ -114,7 +114,7 @@ const MOCK_DB = {
       totalSold: 98,
       averageRating: 4.9,
       reviewCount: 29,
-      seo: { title: 'Dedunu Rainbow Slides - Hush Craft', description: 'Multicolored floral slides', keywords: ['rainbow', 'slides', 'dedunu', 'multicolored'] }
+      seo: { title: 'Dedunu Rainbow Slides - Hush Crafts', description: 'Multicolored floral slides', keywords: ['rainbow', 'slides', 'dedunu', 'multicolored'] }
     },
     {
       id: 'kaha-malee',
@@ -122,7 +122,7 @@ const MOCK_DB = {
       summary: 'Cheerful yellow floral slides to brighten up sunny days.',
       description: 'Bright and sunny, the Kaha Malee slides feature vibrant yellow fabric blossoms to add a warm, cheerful tone to your style.',
       basePrice: 2700,
-      categoryIds: ['c1'],
+      categoryIds: ['c1', 'c4', 'c5'],
       images: [decodeURIComponent('https://res.cloudinary.com/don5ltush/image/upload/v1781510074/%E0%B6%9A%E0%B7%84_%E0%B6%B8%E0%B6%BD%E0%B7%93_fif4bh.jpg')],
       status: 'published',
       isBestSeller: false,
@@ -130,7 +130,7 @@ const MOCK_DB = {
       totalSold: 70,
       averageRating: 4.7,
       reviewCount: 22,
-      seo: { title: 'Kaha Malee - Hush Craft', description: 'Yellow floral slide slippers', keywords: ['yellow slides', 'kaha malee', 'floral'] }
+      seo: { title: 'Kaha Malee - Hush Crafts', description: 'Yellow floral slide slippers', keywords: ['yellow slides', 'kaha malee', 'floral'] }
     },
     {
       id: 'nil-kumari',
@@ -138,7 +138,7 @@ const MOCK_DB = {
       summary: 'Royal blue floral slide slippers with sparkling rhinestone centers.',
       description: 'Emanate elegance with the Nil Kumari slides. Features deep royal blue fabric blossoms highlighted by glittering rhinestone centers on a soft black base.',
       basePrice: 3400,
-      categoryIds: ['c2'],
+      categoryIds: ['c2', 'c5'],
       images: [decodeURIComponent('https://res.cloudinary.com/don5ltush/image/upload/v1781510074/%E0%B6%B1%E0%B7%92%E0%B6%BD%E0%B7%8A_%E0%B6%9A%E0%B7%94%E0%B6%B8%E0%B7%8F%E0%B6%BB%E0%B7%92_pz4ofu.jpg')],
       status: 'published',
       isBestSeller: true,
@@ -146,7 +146,7 @@ const MOCK_DB = {
       totalSold: 135,
       averageRating: 5.0,
       reviewCount: 54,
-      seo: { title: 'Nil Kumari - Hush Craft', description: 'Royal blue princess floral slides', keywords: ['blue princess', 'royal blue', 'slides', 'nil kumari'] }
+      seo: { title: 'Nil Kumari - Hush Crafts', description: 'Royal blue princess floral slides', keywords: ['blue princess', 'royal blue', 'slides', 'nil kumari'] }
     },
     {
       id: 'kalu-samanalee',
@@ -162,7 +162,7 @@ const MOCK_DB = {
       totalSold: 64,
       averageRating: 4.6,
       reviewCount: 20,
-      seo: { title: 'Kalu Samanalee - Hush Craft', description: 'Black butterfly slides', keywords: ['black butterfly', 'mules', 'kalu samanalee'] }
+      seo: { title: 'Kalu Samanalee - Hush Crafts', description: 'Black butterfly slides', keywords: ['black butterfly', 'mules', 'kalu samanalee'] }
     },
     {
       id: 'suriyakanthi-sunflower',
@@ -170,7 +170,7 @@ const MOCK_DB = {
       summary: 'Beautiful sunflower-styled strap sandals that bring cheer to your walk.',
       description: 'Handcrafted with bright yellow and black sunflower motifs, the Suriyakanthi sandals offer positive, sunny vibes and premium sole comfort.',
       basePrice: 3150,
-      categoryIds: ['c1'],
+      categoryIds: ['c1', 'c5'],
       images: [decodeURIComponent('https://res.cloudinary.com/don5ltush/image/upload/v1781510073/%E0%B7%83%E0%B7%96%E0%B6%BC%E0%B7%92%E0%B6%BA%E0%B6%9A%E0%B7%8F%E0%B6%B1%E0%B7%8A%E0%B6%AD%E0%B7%92_ba4kda.jpg')],
       status: 'published',
       isBestSeller: true,
@@ -178,7 +178,7 @@ const MOCK_DB = {
       totalSold: 110,
       averageRating: 4.8,
       reviewCount: 42,
-      seo: { title: 'Suriyakanthi Sunflower - Hush Craft', description: 'Sunflower strap sandals', keywords: ['sunflower', 'sandals', 'suriyakanthi'] }
+      seo: { title: 'Suriyakanthi Sunflower - Hush Crafts', description: 'Sunflower strap sandals', keywords: ['sunflower', 'sandals', 'suriyakanthi'] }
     },
     {
       id: 'rosa-pata-malee',
@@ -186,7 +186,7 @@ const MOCK_DB = {
       summary: 'Soft pink floral slides with delicate layers of plush petals.',
       description: 'The Rosa Pata Malee slides offer premium comfort with highly detailed layered pink petals, set on a cushioned white base.',
       basePrice: 2950,
-      categoryIds: ['c1'],
+      categoryIds: ['c1', 'c4', 'c5'],
       images: [decodeURIComponent('https://res.cloudinary.com/don5ltush/image/upload/v1781510073/%E0%B6%BB%E0%B7%9D%E0%B7%83_%E0%B6%B4%E0%B7%8F%E0%B6%A7_%E0%B6%B8%E0%B6%BD%E0%B7%93_sys2lk.jpg')],
       status: 'published',
       isBestSeller: false,
@@ -194,7 +194,7 @@ const MOCK_DB = {
       totalSold: 78,
       averageRating: 4.7,
       reviewCount: 26,
-      seo: { title: 'Rosa Pata Malee - Hush Craft', description: 'Pink petal floral slides', keywords: ['pink slides', 'rosa pata medium', 'petals'] }
+      seo: { title: 'Rosa Pata Malee - Hush Crafts', description: 'Pink petal floral slides', keywords: ['pink slides', 'rosa pata medium', 'petals'] }
     },
     {
       id: 'aluth-malee',
@@ -202,7 +202,7 @@ const MOCK_DB = {
       summary: 'Modern blossom slide design with fresh colors and sleek sole.',
       description: 'A fresh addition to our floral catalog, Aluth Malee features a modern pastel blossom design on a flexible, highly durable flat sole.',
       basePrice: 3000,
-      categoryIds: ['c3'],
+      categoryIds: ['c3', 'c4'],
       images: [decodeURIComponent('https://res.cloudinary.com/don5ltush/image/upload/v1781510073/%E0%B6%85%E0%B6%BD%E0%B7%94%E0%B6%AD%E0%B7%8A_%E0%B6%B8%E0%B6%BD%E0%B7%93_mpzrbh.jpg')],
       status: 'published',
       isBestSeller: false,
@@ -210,7 +210,7 @@ const MOCK_DB = {
       totalSold: 30,
       averageRating: 4.5,
       reviewCount: 9,
-      seo: { title: 'Aluth Malee - Hush Craft', description: 'New blossom flat slides', keywords: ['aluth malee', 'slides', 'slipper'] }
+      seo: { title: 'Aluth Malee - Hush Crafts', description: 'New blossom flat slides', keywords: ['aluth malee', 'slides', 'slipper'] }
     },
     {
       id: 'neelamanee-sapphire',
@@ -218,7 +218,7 @@ const MOCK_DB = {
       summary: 'Rich sapphire-blue flower mules combining plush comfort and depth.',
       description: 'Named after the precious sapphire, the Neelamanee mules feature dense, rich blue velvet-like flowers on thick, premium-padded straps.',
       basePrice: 3300,
-      categoryIds: ['c2'],
+      categoryIds: ['c2', 'c5'],
       images: [decodeURIComponent('https://res.cloudinary.com/don5ltush/image/upload/v1781510072/%E0%B6%B1%E0%B7%93%E0%B6%B4%E0%B6%B8%E0%B6%B1%E0%B7%93_gi9q7s.jpg')],
       status: 'published',
       isBestSeller: true,
@@ -226,7 +226,7 @@ const MOCK_DB = {
       totalSold: 145,
       averageRating: 5.0,
       reviewCount: 61,
-      seo: { title: 'Neelamanee Sapphire Slides - Hush Craft', description: 'Blue sapphire floral mules', keywords: ['neelamanee', 'sapphire', 'mules', 'blue slides'] }
+      seo: { title: 'Neelamanee Sapphire Slides - Hush Crafts', description: 'Blue sapphire floral mules', keywords: ['neelamanee', 'sapphire', 'mules', 'blue slides'] }
     },
     {
       id: 'sudu-malee-lily',
@@ -234,7 +234,7 @@ const MOCK_DB = {
       summary: 'Elegant white jasmine slipper slides with premium cushioned soles.',
       description: 'A luxurious variation of our white jasmine line, using double-layered strap fabric and high-resiliency sole cushioning.',
       basePrice: 2750,
-      categoryIds: ['c1'],
+      categoryIds: ['c1', 'c4', 'c5'],
       images: [decodeURIComponent('https://res.cloudinary.com/don5ltush/image/upload/v1781510072/%E0%B7%83%E0%B7%94%E0%B6%AF%E0%B7%94_%E0%B6%B8%E0%B6%BD%E0%B7%93_utvadp.jpg')],
       status: 'published',
       isBestSeller: false,
@@ -242,7 +242,7 @@ const MOCK_DB = {
       totalSold: 88,
       averageRating: 4.8,
       reviewCount: 31,
-      seo: { title: 'Sudu Malee White Lily - Hush Craft', description: 'White lily floral slides', keywords: ['white lily', 'slides', 'sudu malee'] }
+      seo: { title: 'Sudu Malee White Lily - Hush Crafts', description: 'White lily floral slides', keywords: ['white lily', 'slides', 'sudu malee'] }
     },
     {
       id: 'komala-liya',
@@ -250,7 +250,7 @@ const MOCK_DB = {
       summary: 'Delicate slides with stylish pink and cream floral accents.',
       description: 'Designed for grace and poise, the Komala Liya slides feature delicate light pink and cream fabric blossoms with built-in sole arch support.',
       basePrice: 3100,
-      categoryIds: ['c3'],
+      categoryIds: ['c3', 'c5'],
       images: [decodeURIComponent('https://res.cloudinary.com/don5ltush/image/upload/v1781510072/%E0%B6%9A%E0%B7%9C%E0%B6%B8%E0%B6%BD_%E0%B6%BD%E0%B7%92%E0%B6%B8%E0%B7%8F_%EF%B8%8F_p9wftr.jpg')],
       status: 'published',
       isBestSeller: true,
@@ -258,7 +258,7 @@ const MOCK_DB = {
       totalSold: 112,
       averageRating: 4.9,
       reviewCount: 40,
-      seo: { title: 'Komala Liya - Hush Craft', description: 'Graceful lady floral slides', keywords: ['komala liya', 'sandals', 'slides'] }
+      seo: { title: 'Komala Liya - Hush Crafts', description: 'Graceful lady floral slides', keywords: ['komala liya', 'sandals', 'slides'] }
     },
     {
       id: 'hush-classic-gold',
@@ -266,7 +266,7 @@ const MOCK_DB = {
       summary: 'Traditional gold-tinted floral sandal slide for premium style.',
       description: 'Elegant golden hues on handcrafted fabric flowers. Perfect for festive celebrations, matching luxury with comfortable walkability.',
       basePrice: 3200,
-      categoryIds: ['c1'],
+      categoryIds: ['c1', 'c5'],
       images: ['https://res.cloudinary.com/don5ltush/image/upload/v1781510072/700987729_1346539884323674_2260041146287108164_n_amullt.jpg'],
       status: 'published',
       isBestSeller: true,
@@ -274,7 +274,7 @@ const MOCK_DB = {
       totalSold: 93,
       averageRating: 4.8,
       reviewCount: 37,
-      seo: { title: 'Hush Classic Gold - Hush Craft', description: 'Gold floral sandal slides', keywords: ['gold slides', 'classic gold', 'slippers'] }
+      seo: { title: 'Hush Classic Gold - Hush Crafts', description: 'Gold floral sandal slides', keywords: ['gold slides', 'classic gold', 'slippers'] }
     },
     {
       id: 'sudu-malee-ii',
@@ -282,7 +282,7 @@ const MOCK_DB = {
       summary: 'Refined white flower slides with updated strap aesthetics.',
       description: 'The second edition of our classic white flower slides, updated with softer strap contours and premium under-foot support.',
       basePrice: 2800,
-      categoryIds: ['c1'],
+      categoryIds: ['c1', 'c4', 'c5'],
       images: [decodeURIComponent('https://res.cloudinary.com/don5ltush/image/upload/v1781510071/%E0%B7%83%E0%B7%94%E0%B6%AF%E0%B7%94_%E0%B6%B8%E0%B6%BD%E0%B7%93_II_iecx8f.jpg')],
       status: 'published',
       isBestSeller: false,
@@ -290,7 +290,7 @@ const MOCK_DB = {
       totalSold: 48,
       averageRating: 4.7,
       reviewCount: 16,
-      seo: { title: 'Sudu Malee II - Hush Craft', description: 'Updated white flower slides', keywords: ['sudu malee ii', 'white slides'] }
+      seo: { title: 'Sudu Malee II - Hush Crafts', description: 'Updated white flower slides', keywords: ['sudu malee ii', 'white slides'] }
     },
     {
       id: 'midnight-crimson',
@@ -298,7 +298,7 @@ const MOCK_DB = {
       summary: 'Deep red roses set on black straps for romantic aesthetics.',
       description: 'Contrast deep red fabric roses against a solid black strap for a romantic, gothic-chic look. Handcrafted with dense petal layers.',
       basePrice: 3150,
-      categoryIds: ['c2'],
+      categoryIds: ['c2', 'c5'],
       images: ['https://res.cloudinary.com/don5ltush/image/upload/v1781510071/690687907_1339773455000317_330609780595289063_n_jyw8ph.jpg'],
       status: 'published',
       isBestSeller: true,
@@ -306,7 +306,7 @@ const MOCK_DB = {
       totalSold: 160,
       averageRating: 4.9,
       reviewCount: 72,
-      seo: { title: 'Midnight Crimson - Hush Craft', description: 'Red roses black strap slides', keywords: ['midnight crimson', 'red rose slides', 'gothic floral'] }
+      seo: { title: 'Midnight Crimson - Hush Crafts', description: 'Red roses black strap slides', keywords: ['midnight crimson', 'red rose slides', 'gothic floral'] }
     },
     {
       id: 'punchi-samanalee',
@@ -322,13 +322,19 @@ const MOCK_DB = {
       totalSold: 55,
       averageRating: 4.6,
       reviewCount: 14,
-      seo: { title: 'Punchi Samanalee - Hush Craft', description: 'Small butterfly slipper slides', keywords: ['punchi samanalee', 'little butterfly', 'slides'] }
+      seo: { title: 'Punchi Samanalee - Hush Crafts', description: 'Small butterfly slipper slides', keywords: ['punchi samanalee', 'little butterfly', 'slides'] }
     }
   ],
   categories: [
     { id: 'c1', name: 'Classic', slug: 'classic', productCount: 8, image: 'https://res.cloudinary.com/don5ltush/image/upload/v1781510078/රෝස_මලී_dv9qpi.jpg' },
     { id: 'c2', name: 'Mules', slug: 'mules', productCount: 6, image: 'https://res.cloudinary.com/don5ltush/image/upload/v1781510074/නිල්_කුමාරි_pz4ofu.jpg' },
     { id: 'c3', name: 'Sandals', slug: 'sandals', productCount: 6, image: 'https://res.cloudinary.com/don5ltush/image/upload/v1781510077/නිල්_සමනලී_awiu92.jpg' },
+    { id: 'c4', name: 'Slides', slug: 'slides', productCount: 9, image: 'https://res.cloudinary.com/don5ltush/image/upload/v1781510075/දේදුනු_zjxfvf.jpg' },
+    { id: 'c5', name: 'Floral', slug: 'floral', productCount: 14, image: 'https://res.cloudinary.com/don5ltush/image/upload/v1781510073/රෝස_පාට_මලී_sys2lk.jpg' },
+    { id: 'c6', name: 'Bestsellers', slug: 'bestsellers', productCount: 11, image: 'https://res.cloudinary.com/don5ltush/image/upload/v1781510072/700987729_1346539884323674_2260041146287108164_n_amullt.jpg' },
+    { id: 'c7', name: 'Heels', slug: 'heels', productCount: 5, image: 'https://res.cloudinary.com/don5ltush/image/upload/v1781510078/දම්_ලිලී_මලි_biadon.jpg' },
+    { id: 'c8', name: 'Wedges', slug: 'wedges', productCount: 4, image: 'https://res.cloudinary.com/don5ltush/image/upload/v1781510075/පුංචි_සමනලී_gy3c4c.jpg' },
+    { id: 'c9', name: 'Casual', slug: 'casual', productCount: 7, image: 'https://res.cloudinary.com/don5ltush/image/upload/v1781510077/සුදු_මලී_ze5io3.jpg' }
   ]
 };
 

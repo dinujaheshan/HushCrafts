@@ -19,8 +19,8 @@ const plusJakartaSans = Plus_Jakarta_Sans({
 
 export const metadata: Metadata = {
   title: {
-    default: "Hush Craft | Luxury Handmade Slippers Sri Lanka",
-    template: "%s | Hush Craft Sri Lanka"
+    default: "Hush Crafts | Luxury Handmade Slippers Sri Lanka",
+    template: "%s | Hush Crafts Sri Lanka"
   },
   description:
     "Shop premium handmade slippers in Sri Lanka. Tailored, elegant, and comfortable footwear designed for women. Cash on delivery island-wide.",
@@ -28,25 +28,25 @@ export const metadata: Metadata = {
     "handmade slippers Sri Lanka",
     "custom slippers Colombo",
     "ladies footwear Sri Lanka",
-    "Hush Craft slippers"
+    "Hush Crafts slippers"
   ],
   openGraph: {
     type: "website",
     locale: "en_LK",
     url: "https://hushcraft.lk",
-    siteName: "Hush Craft",
+    siteName: "Hush Crafts",
     images: [
       {
         url: "https://hushcraft.lk/og-home.jpg",
         width: 1200,
         height: 630,
-        alt: "Hush Craft Handmade Footwear"
+        alt: "Hush Crafts Handmade Footwear"
       }
     ]
   },
   twitter: {
     card: "summary_large_image",
-    title: "Hush Craft | Handmade Slippers",
+    title: "Hush Crafts | Handmade Slippers",
     description: "Shop elegant handmade slippers in Sri Lanka.",
     images: ["https://hushcraft.lk/og-home.jpg"]
   },
@@ -70,8 +70,8 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col bg-background text-foreground">
         <ThemeProvider
           attribute="class"
-          defaultTheme="system"
-          enableSystem
+          defaultTheme="light"
+          enableSystem={false}
           disableTransitionOnChange
         >
           <Navbar />

@@ -52,8 +52,8 @@ export default function ProductCard({ product }: ProductCardProps) {
     <article
       className={`group relative rounded-2xl overflow-hidden transition-all duration-300 ${
         product.isBestSeller 
-          ? 'bg-gradient-to-b from-primary/5 to-card border-2 border-primary/20 hover:border-primary shadow-sm hover:shadow-primary/20' 
-          : 'bg-card border border-border/50 hover:border-primary/20 hover:shadow-lg'
+          ? 'bg-gradient-to-b from-primary/5 to-card border-2 border-primary/20 hover:border-primary hover:shadow-lg hover:shadow-primary/15' 
+          : 'bg-card border border-border/50 hover:border-primary/20 hover:shadow-xl hover:shadow-foreground/5'
       }`}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
@@ -155,12 +155,12 @@ export default function ProductCard({ product }: ProductCardProps) {
                   />
                 ))}
               </div>
-              <span className="text-[10px] text-muted-foreground">({product.reviewCount})</span>
+              <span className="text-[10px] font-bold text-muted-foreground">({product.reviewCount})</span>
             </div>
           )}
 
           <div className="flex items-center justify-between mt-2">
-            <span className="text-sm font-semibold text-primary">
+            <span className="text-sm font-bold text-primary" style={{ fontFamily: 'var(--font-sans)' }}>
               LKR {displayPrice.toLocaleString()}
             </span>
             <button

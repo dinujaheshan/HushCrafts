@@ -264,34 +264,45 @@ export default function Navbar() {
           {/* Main Bar */}
           <div className="flex items-center justify-between h-16 md:h-20 gap-4 md:gap-8 pb-2 md:pb-0 pt-2 md:pt-0">
             
-            {/* Mobile menu toggle */}
-            <button
-              className="md:hidden text-white hover:bg-white/10 p-2 rounded-lg transition-colors flex flex-col justify-center items-center w-10 h-10 gap-1.5 relative"
-              onClick={() => setMenuOpen(!menuOpen)}
-              aria-label="Toggle menu"
-            >
-              <span className={`h-0.5 bg-white rounded-full transition-all duration-300 transform ${menuOpen ? 'rotate-45 translate-y-2' : ''} w-6`} />
-              <span className={`h-0.5 bg-white rounded-full transition-all duration-300 ${menuOpen ? 'opacity-0 w-0' : 'w-6'}`} />
-              <span className={`h-0.5 bg-white rounded-full transition-all duration-300 transform ${menuOpen ? '-rotate-45 -translate-y-2' : ''} w-6`} />
-            </button>
-
-            {/* Logo */}
-            <Link href="/" className="flex shrink-0 items-center gap-2" id="nav-logo">
-              <div className="relative w-12 h-12 md:w-14 md:h-14 rounded-full overflow-hidden border-2 border-white/20 shadow-md">
-                <Image 
-                  src="/images/logo.jpg" 
-                  alt="Hush Craft Logo" 
-                  fill 
-                  className="object-cover"
-                />
-              </div>
-              <span
-                className="text-2xl md:text-3xl font-serif font-bold text-white tracking-tight hidden sm:block"
-                style={{ fontFamily: 'var(--font-serif)' }}
+            {/* Left aligned Hamburger + Logo + Brand Name */}
+            <div className="flex items-center gap-2">
+              {/* Mobile menu toggle */}
+              <button
+                className="md:hidden text-white hover:bg-white/10 p-2 rounded-lg transition-colors flex flex-col justify-center items-center w-10 h-10 gap-1.5 relative"
+                onClick={() => setMenuOpen(!menuOpen)}
+                aria-label="Toggle menu"
               >
-                Hush Craft
-              </span>
-            </Link>
+                <span className={`h-0.5 bg-white rounded-full transition-all duration-300 transform ${menuOpen ? 'rotate-45 translate-y-2' : ''} w-6`} />
+                <span className={`h-0.5 bg-white rounded-full transition-all duration-300 ${menuOpen ? 'opacity-0 w-0' : 'w-6'}`} />
+                <span className={`h-0.5 bg-white rounded-full transition-all duration-300 transform ${menuOpen ? '-rotate-45 -translate-y-2' : ''} w-6`} />
+              </button>
+
+              {/* Logo */}
+              <Link href="/" className="flex shrink-0 items-center gap-2" id="nav-logo">
+                <div className="relative w-10 h-10 md:w-14 md:h-14 rounded-full overflow-hidden border-2 border-white/20 shadow-md">
+                  <Image 
+                    src="/images/logo.jpg" 
+                    alt="Hush Crafts Logo" 
+                    fill 
+                    className="object-cover"
+                  />
+                </div>
+                {/* Mobile brand name with shimmer */}
+                <span
+                  className="md:hidden text-lg font-serif font-bold tracking-tight brand-shimmer"
+                  style={{ fontFamily: 'var(--font-serif)' }}
+                >
+                  Hush Crafts
+                </span>
+                {/* Desktop brand name plain white */}
+                <span
+                  className="hidden md:block text-3xl font-serif font-bold text-white tracking-tight"
+                  style={{ fontFamily: 'var(--font-serif)' }}
+                >
+                  Hush Crafts
+                </span>
+              </Link>
+            </div>
 
             {/* Search Bar - Desktop */}
             <div className="hidden md:flex flex-1 max-w-3xl">
@@ -301,7 +312,7 @@ export default function Navbar() {
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   onKeyDown={(e) => e.key === 'Enter' && handleSearch(e)}
-                  placeholder="Search in Hush Craft" 
+                  placeholder="Search in Hush Crafts" 
                   className="w-full h-11 pl-4 pr-4 rounded-l-lg bg-white text-black text-sm focus:outline-none focus:ring-2 focus:ring-primary/20"
                 />
                 <button 
@@ -314,8 +325,8 @@ export default function Navbar() {
               </div>
             </div>
 
-            {/* Right actions */}
-            <div className="flex items-center shrink-0 gap-1 md:gap-2">
+            {/* Right actions - Hidden on Mobile */}
+            <div className="hidden md:flex items-center shrink-0 gap-1 md:gap-2">
               {/* Auth / User Account */}
               {mounted && user ? (
                 <div className="flex items-center gap-1">
@@ -375,7 +386,7 @@ export default function Navbar() {
                       </div>
                     )}
                   </div>
-
+ 
                   <button 
                     onClick={handleLogout}
                     className="hidden md:flex flex-col items-center p-2 text-white/80 hover:text-white hover:bg-white/10 rounded-lg transition-colors cursor-pointer"
@@ -447,35 +458,14 @@ export default function Navbar() {
               </button>
             </div>
           </div>
-
-          {/* Search Bar - Mobile (below logo) */}
-          <div className="md:hidden pb-3">
-             <div className="flex w-full shadow-sm">
-                <input 
-                  type="text" 
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  onKeyDown={(e) => e.key === 'Enter' && handleSearch(e)}
-                  placeholder="Search in Hush Craft" 
-                  className="w-full h-10 pl-3 pr-3 rounded-l-md bg-white text-black text-sm focus:outline-none focus:ring-2 focus:ring-primary/20"
-                />
-                <button 
-                  onClick={handleSearch}
-                  className="h-10 w-10 bg-[#ffe4ec] text-primary flex items-center justify-center rounded-r-md transition-colors hover:bg-[#ffd1df]" 
-                  aria-label="Search"
-                >
-                  <Search size={18} />
-                </button>
-              </div>
-          </div>
         </div>
 
         {/* Categories Bottom Bar */}
         <div className="hidden md:block bg-background border-b border-border shadow-sm">
-          <div className="container mx-auto px-4 flex items-center gap-8 h-10 text-sm font-medium">
-             <Link href="/shop" className="text-foreground/80 hover:text-primary transition-colors">Shop All</Link>
-             <Link href="/shop?categoryId=collections" className="text-foreground/80 hover:text-primary transition-colors">Collections</Link>
-             <Link href="/shop?sort=hotitems" className="text-foreground/80 hover:text-primary transition-colors flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-destructive animate-pulse" /> Hot Items</Link>
+          <div className="container mx-auto px-4 flex items-center justify-center gap-10 h-10 text-sm font-semibold">
+             <Link href="/shop" className="text-foreground/80 hover:text-primary transition-colors uppercase tracking-wide">Shop</Link>
+             <Link href="/shop?sort=newest" className="text-foreground/80 hover:text-primary transition-colors uppercase tracking-wide">New Arrivals</Link>
+             <Link href="/shop?sort=hotitems" className="text-foreground/80 hover:text-primary transition-colors flex items-center gap-1.5 uppercase tracking-wide"><span className="w-2 h-2 rounded-full bg-destructive animate-pulse" /> Hot Items</Link>
           </div>
         </div>
       </header>
@@ -495,8 +485,8 @@ export default function Navbar() {
         }`}
       >
         {/* Header inside drawer */}
-        <div className="flex items-center justify-between px-5 py-4 border-b border-border bg-card">
-          <span className="font-serif text-lg font-bold text-primary" style={{ fontFamily: 'var(--font-serif)' }}>Hush Craft</span>
+        <div className="flex items-center justify-between px-5 py-4 border-b border-border bg-card shrink-0">
+          <span className="font-serif text-lg font-bold text-primary" style={{ fontFamily: 'var(--font-serif)' }}>Hush Crafts</span>
           <button
             onClick={() => setMenuOpen(false)}
             className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-secondary transition-colors text-foreground/60"
@@ -506,47 +496,175 @@ export default function Navbar() {
           </button>
         </div>
 
+        {/* Search inside drawer */}
+        <div className="px-5 pt-4 pb-2 border-b border-border shrink-0">
+          <form onSubmit={handleSearch} className="flex w-full shadow-sm">
+            <input 
+              type="text" 
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search in Hush Crafts" 
+              className="w-full h-10 pl-3 pr-3 rounded-l-md bg-secondary text-foreground text-sm border-y border-l border-border focus:outline-none focus:ring-1 focus:ring-primary"
+            />
+            <button 
+              type="submit"
+              className="h-10 w-10 bg-primary/10 text-primary flex items-center justify-center rounded-r-md border border-border border-l-0 transition-colors hover:bg-primary/20" 
+              aria-label="Search"
+            >
+              <Search size={18} />
+            </button>
+          </form>
+        </div>
+
         {/* Links inside drawer */}
-        <nav className="flex flex-col py-6 px-5 gap-4 overflow-y-auto">
-          <Link href="/shop" className="text-base font-semibold text-foreground hover:text-primary transition-colors" onClick={() => setMenuOpen(false)}>Shop All</Link>
-          <Link href="/shop?categoryId=collections" className="text-base font-semibold text-foreground hover:text-primary transition-colors" onClick={() => setMenuOpen(false)}>Collections</Link>
-          <Link href="/shop?sort=hotitems" className="text-base font-semibold text-destructive hover:text-destructive/80 flex items-center gap-2 transition-colors" onClick={() => setMenuOpen(false)}>
-            <span className="w-2 h-2 rounded-full bg-destructive animate-pulse" /> Hot Items
+        <nav className="flex flex-col py-4 px-5 gap-3.5 overflow-y-auto flex-1">
+          {/* Main Store Pages */}
+          <Link href="/shop" className="text-base font-semibold text-foreground hover:text-primary transition-colors flex items-center gap-3 px-1 py-1" onClick={() => setMenuOpen(false)}>
+            Shop All
+          </Link>
+          <Link href="/shop?categoryId=collections" className="text-base font-semibold text-foreground hover:text-primary transition-colors flex items-center gap-3 px-1 py-1" onClick={() => setMenuOpen(false)}>
+            Collections
+          </Link>
+          <Link href="/shop?sort=hotitems" className="text-base font-semibold text-destructive hover:text-destructive/80 flex items-center gap-3 px-1 py-1 transition-colors" onClick={() => setMenuOpen(false)}>
+            <span className="w-2.5 h-2.5 rounded-full bg-destructive animate-pulse" /> Hot Items
           </Link>
           
-          <div className="h-px bg-border my-2" />
+          <div className="h-px bg-border my-1 shrink-0" />
           
-          <Link href="/about" className="text-base font-medium text-foreground/85 hover:text-primary transition-colors" onClick={() => setMenuOpen(false)}>About Us</Link>
-          <Link href="/contact" className="text-base font-medium text-foreground/85 hover:text-primary transition-colors" onClick={() => setMenuOpen(false)}>Contact Us</Link>
-          <Link href="/wishlist" className="text-base font-medium text-foreground/85 hover:text-primary transition-colors" onClick={() => setMenuOpen(false)}>My Wishlist</Link>
+          {/* E-commerce Actions */}
           
-          <div className="h-px bg-border my-2" />
-          
-          {user ? (
-            <>
-              <Link href="/account" className="text-base font-medium text-foreground/85 hover:text-primary transition-colors" onClick={() => setMenuOpen(false)}>My Account</Link>
-              <button 
-                onClick={() => { handleLogout(); setMenuOpen(false); }} 
-                className="text-left text-base font-medium text-destructive/80 hover:text-destructive transition-colors"
+          {/* Cart Button */}
+          <button 
+            onClick={() => { setMenuOpen(false); setCartOpen(true); }}
+            className="text-left text-base font-medium text-foreground hover:text-primary flex items-center justify-between px-1 py-1.5 transition-colors w-full cursor-pointer"
+          >
+            <span className="flex items-center gap-3">
+              <ShoppingBag size={20} className="text-foreground/70" /> My Cart
+            </span>
+            {totalItems > 0 && (
+              <span className="min-w-[20px] h-[20px] bg-primary text-white text-[11px] font-bold rounded-full flex items-center justify-center px-1.5">
+                {totalItems}
+              </span>
+            )}
+          </button>
+
+          {/* Wishlist Link */}
+          <Link 
+            href="/wishlist" 
+            className="text-base font-medium text-foreground hover:text-primary flex items-center justify-between px-1 py-1.5 transition-colors"
+            onClick={() => setMenuOpen(false)}
+          >
+            <span className="flex items-center gap-3">
+              <Heart size={20} className="text-foreground/70" /> My Wishlist
+            </span>
+            {totalWishlistItems > 0 && (
+              <span className="min-w-[20px] h-[20px] bg-primary text-white text-[11px] font-bold rounded-full flex items-center justify-center px-1.5">
+                {totalWishlistItems}
+              </span>
+            )}
+          </Link>
+
+          {/* Notifications Accordion for Logged in Users */}
+          {user && (
+            <div className="flex flex-col">
+              <button
+                onClick={() => setNotificationsOpen(!notificationsOpen)}
+                className="text-left text-base font-medium text-foreground hover:text-primary flex items-center justify-between px-1 py-1.5 transition-colors w-full cursor-pointer"
               >
-                Logout
+                <span className="flex items-center gap-3">
+                  <Bell size={20} className="text-foreground/70" /> Notifications
+                </span>
+                {unreadCount > 0 && (
+                  <span className="min-w-[20px] h-[20px] bg-primary text-white text-[11px] font-bold rounded-full flex items-center justify-center px-1.5 animate-pulse">
+                    {unreadCount}
+                  </span>
+                )}
               </button>
-            </>
-          ) : (
-            <>
-              <Link href="/login" className="text-base font-medium text-foreground/85 hover:text-primary transition-colors" onClick={() => setMenuOpen(false)}>Login</Link>
-              <Link href="/register" className="text-base font-medium text-foreground/85 hover:text-primary transition-colors" onClick={() => setMenuOpen(false)}>Sign Up</Link>
-            </>
+              
+              {notificationsOpen && (
+                <div className="mt-2 pl-8 pr-1 py-2 space-y-2 bg-secondary/15 rounded-xl border border-border/40 max-h-48 overflow-y-auto">
+                  {notifications.length > 0 ? (
+                    notifications.map(n => (
+                      <div key={n.id} className={`p-2 rounded-lg border text-xs ${n.isRead ? 'border-border bg-background/50' : 'border-primary/20 bg-primary/5'}`}>
+                        <div className="flex justify-between items-start gap-1">
+                          <span className="font-bold text-foreground">{n.title || 'Notification'}</span>
+                          {!n.isRead && (
+                            <button 
+                              onClick={() => handleMarkAsRead(n.id)}
+                              className="text-[9px] font-extrabold uppercase text-primary hover:underline cursor-pointer"
+                            >
+                              Mark read
+                            </button>
+                          )}
+                        </div>
+                        <p className="text-muted-foreground mt-1 whitespace-pre-wrap leading-relaxed">{n.message}</p>
+                      </div>
+                    ))
+                  ) : (
+                    <p className="text-xs text-muted-foreground italic py-1">No notifications.</p>
+                  )}
+                </div>
+              )}
+            </div>
           )}
 
-          <div className="h-px bg-border my-2" />
+          <div className="h-px bg-border my-1 shrink-0" />
 
+          {/* User Profile / Auth */}
+          {user ? (
+            <div className="flex flex-col gap-2">
+              <div className="flex items-center gap-3 p-2.5 rounded-xl bg-secondary/20 border border-border/40">
+                {user.photoURL ? (
+                  <div className="w-9 h-9 rounded-full overflow-hidden border border-border/50 shrink-0">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={`${user.photoURL}${cacheBuster}`} alt="Profile" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+                  </div>
+                ) : (
+                  <div className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center text-primary shrink-0">
+                    <User size={18} />
+                  </div>
+                )}
+                <div className="min-w-0">
+                  <p className="text-xs font-semibold text-foreground truncate">{user.firstName ? `${user.firstName} ${user.lastName}`.trim() : user.name}</p>
+                  <p className="text-[10px] text-muted-foreground truncate">{user.email}</p>
+                </div>
+              </div>
+              <Link href="/account" className="text-base font-medium text-foreground hover:text-primary flex items-center gap-3 px-1 py-1 transition-colors" onClick={() => setMenuOpen(false)}>
+                <User size={20} className="text-foreground/70" /> My Account
+              </Link>
+              <button 
+                onClick={() => { handleLogout(); setMenuOpen(false); }} 
+                className="text-left text-base font-medium text-destructive/80 hover:text-destructive flex items-center gap-3 px-1 py-1 transition-colors cursor-pointer"
+              >
+                <LogOut size={20} /> Sign Out
+              </button>
+            </div>
+          ) : (
+            <Link href="/login" className="text-base font-medium text-foreground hover:text-primary flex items-center gap-3 px-1 py-1 transition-colors" onClick={() => setMenuOpen(false)}>
+              <User size={20} className="text-foreground/70" /> Sign In / Register
+            </Link>
+          )}
+
+          <div className="h-px bg-border my-1 shrink-0" />
+
+          {/* Theme switcher & Info */}
           <button 
             onClick={() => { setTheme(theme === 'dark' ? 'light' : 'dark'); setMenuOpen(false); }} 
-            className="text-left text-base font-medium text-foreground/85 hover:text-primary transition-colors"
+            className="text-left text-base font-medium text-foreground hover:text-primary flex items-center gap-3 px-1 py-1 transition-colors cursor-pointer w-full"
           >
-            {mounted && theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+            {theme === 'dark' ? (
+              <><Sun size={20} className="text-foreground/70" /> Switch to Light Mode</>
+            ) : (
+              <><Moon size={20} className="text-foreground/70" /> Switch to Dark Mode</>
+            )}
           </button>
+
+          <Link href="/about" className="text-base font-medium text-foreground/80 hover:text-primary transition-colors flex items-center gap-3 px-1 py-1" onClick={() => setMenuOpen(false)}>
+            About Us
+          </Link>
+          <Link href="/contact" className="text-base font-medium text-foreground/80 hover:text-primary transition-colors flex items-center gap-3 px-1 py-1" onClick={() => setMenuOpen(false)}>
+            Contact Us
+          </Link>
         </nav>
       </aside>
 

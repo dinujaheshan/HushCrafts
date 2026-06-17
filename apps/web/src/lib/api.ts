@@ -1,5 +1,5 @@
 /**
- * Hush Craft API Client
+ * Hush Crafts API Client
  * Connects directly to Firebase Firestore
  */
 

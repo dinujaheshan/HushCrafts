@@ -4,8 +4,8 @@ import Image from 'next/image';
 import { Heart, Star, Award, Users, Sparkles, ArrowRight } from '@/components/MaterialIcons';
 
 export const metadata: Metadata = {
-  title: 'About Us | Hush Craft',
-  description: 'Learn the story behind Hush Craft — handcrafted slippers made with love in Sri Lanka by passionate artisans.',
+  title: 'About Us | Hush Crafts',
+  description: 'Learn the story behind Hush Crafts — handcrafted slippers made with love in Sri Lanka by passionate artisans.',
 };
 
 const values = [
@@ -55,7 +55,7 @@ export default function AboutPage() {
             Crafted with <span className="text-primary">Heart</span>
           </h1>
           <p className="text-muted-foreground text-lg md:text-xl max-w-2xl mx-auto leading-relaxed">
-            Hush Craft was born from a simple belief — every woman deserves footwear that feels as beautiful as it looks. We create handmade slippers that tell a story.
+            Hush Crafts was born from a simple belief — every woman deserves footwear that feels as beautiful as it looks. We create handmade slippers that tell a story.
           </p>
         </div>
       </section>
@@ -68,7 +68,7 @@ export default function AboutPage() {
               <div className="relative aspect-[4/5] rounded-3xl overflow-hidden shadow-2xl">
                 <Image
                   src="/images/logo.jpg"
-                  alt="Hush Craft Artisan"
+                  alt="Hush Crafts Artisan"
                   fill
                   className="object-cover"
                 />
@@ -90,13 +90,13 @@ export default function AboutPage() {
               </h2>
               <div className="space-y-4 text-muted-foreground leading-relaxed">
                 <p>
-                  Hush Craft started as a passion project in Pitakotte, Sri Lanka — a small home workshop with big dreams. Our founder, inspired by the rich tradition of Sri Lankan craftsmanship, wanted to bring elegant, handmade footwear to women who appreciate artistry in everyday things.
+                  Hush Crafts started as a passion project in Pitakotte, Sri Lanka — a small home workshop with big dreams. Our founder, inspired by the rich tradition of Sri Lankan craftsmanship, wanted to bring elegant, handmade footwear to women who appreciate artistry in everyday things.
                 </p>
                 <p>
-                  Each pair of Hush Craft slippers is made by hand, using carefully selected fabrics, floral embellishments, and thoughtful construction. No two pairs are ever exactly the same — just like the women who wear them.
+                  Each pair of Hush Crafts slippers is made by hand, using carefully selected fabrics, floral embellishments, and thoughtful construction. No two pairs are ever exactly the same — just like the women who wear them.
                 </p>
                 <p>
-                  What started as a small side hustle has grown into a beloved brand, delivering comfort and elegance island-wide. We&apos;re proud to say that every Hush Craft slipper carries a piece of our soul.
+                  What started as a small side hustle has grown into a beloved brand, delivering comfort and elegance island-wide. We&apos;re proud to say that every Hush Crafts slipper carries a piece of our soul.
                 </p>
               </div>
               <Link

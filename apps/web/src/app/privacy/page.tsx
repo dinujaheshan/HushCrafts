@@ -3,8 +3,8 @@ import Link from 'next/link';
 import { ArrowLeft, Shield, Lock, Eye, CheckCircle } from '@/components/MaterialIcons';
 
 export const metadata: Metadata = {
-  title: 'Privacy Policy | Hush Craft',
-  description: 'Learn how Hush Craft collects, uses, and protects your personal information. Your privacy is our priority.',
+  title: 'Privacy Policy | Hush Crafts',
+  description: 'Learn how Hush Crafts collects, uses, and protects your personal information. Your privacy is our priority.',
 };
 
 export default function PrivacyPolicyPage() {
@@ -33,7 +33,7 @@ export default function PrivacyPolicyPage() {
       content: (
         <div className="space-y-3">
           <p>
-            Hush Craft uses your personal data to provide a seamless shopping experience. Specific uses include:
+            Hush Crafts uses your personal data to provide a seamless shopping experience. Specific uses include:
           </p>
           <ul className="list-disc pl-5 space-y-1 text-muted-foreground">
             <li>Order Processing: Processing payments, printing shipping labels, and managing deliveries across Sri Lanka.</li>
@@ -93,7 +93,7 @@ export default function PrivacyPolicyPage() {
             Last updated: <span className="text-foreground">{lastUpdated}</span>
           </p>
           <p className="text-base text-muted-foreground leading-relaxed">
-            At Hush Craft, we are committed to safeguarding the privacy of our website visitors and customers. 
+            At Hush Crafts, we are committed to safeguarding the privacy of our website visitors and customers. 
             This policy outlines how we handle, protect, and respect your personal information.
           </p>
         </div>

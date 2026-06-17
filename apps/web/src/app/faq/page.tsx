@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { ChevronDown } from '@/components/MaterialIcons';
 
 export const metadata: Metadata = {
-  title: 'Frequently Asked Questions | Hush Craft',
+  title: 'Frequently Asked Questions | Hush Crafts',
   description: 'Find answers to your questions about shipping, returns, sizing, and product care.',
 };
 

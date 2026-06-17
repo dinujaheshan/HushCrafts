@@ -18,6 +18,8 @@ interface SearchParams {
   sort?: string;
   filter?: string;
   q?: string;
+  minPrice?: string;
+  maxPrice?: string;
 }
 
 import { redirect } from 'next/navigation';
@@ -33,6 +35,14 @@ async function ShopContent({ searchParams }: { searchParams: SearchParams }) {
 
   let products = productsRes.success ? productsRes.data.products : [];
   const categories = categoriesRes.success ? categoriesRes.data.categories : [];
+
+  // Filter by price
+  if (searchParams.minPrice) {
+    products = products.filter(p => p.basePrice >= parseInt(searchParams.minPrice as string));
+  }
+  if (searchParams.maxPrice) {
+    products = products.filter(p => p.basePrice <= parseInt(searchParams.maxPrice as string));
+  }
 
   // Sort products
   if (searchParams.sort) {
@@ -126,7 +136,7 @@ async function ShopContent({ searchParams }: { searchParams: SearchParams }) {
             <p className="text-sm text-muted-foreground mb-6">
               Showing <strong className="text-foreground">{products.length}</strong> products
             </p>
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-5">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
               {products.map(product => (
                 <ProductCard key={product.id} product={product} />
               ))}
@@ -180,8 +190,8 @@ export default async function ShopPage({
 
         <Suspense
           fallback={
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-5">
-              {[...Array(6)].map((_, i) => (
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+              {[...Array(8)].map((_, i) => (
                 <div key={i} className="rounded-2xl overflow-hidden border border-border/50 animate-pulse">
                   <div className="aspect-[4/5] bg-muted/30" />
                   <div className="p-3.5 space-y-2">

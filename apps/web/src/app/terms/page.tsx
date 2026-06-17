@@ -3,8 +3,8 @@ import Link from 'next/link';
 import { ArrowLeft, Package, CreditCard, Truck, RefreshCw, Scale } from '@/components/MaterialIcons';
 
 export const metadata: Metadata = {
-  title: 'Terms of Service | Hush Craft',
-  description: 'Review the terms and conditions governing the use of Hush Craft website and our purchasing agreement.',
+  title: 'Terms of Service | Hush Crafts',
+  description: 'Review the terms and conditions governing the use of Hush Crafts website and our purchasing agreement.',
 };
 
 export default function TermsOfServicePage() {
@@ -16,7 +16,7 @@ export default function TermsOfServicePage() {
       title: '1. Products & Handmade Character',
       content: (
         <p>
-          Hush Craft slippers are individually handcrafted by local Sri Lankan artisans. 
+          Hush Crafts slippers are individually handcrafted by local Sri Lankan artisans. 
           Due to the nature of handmade work, slight variations in stitching, color tone, and texture are natural characteristics that make each pair unique. 
           We make every effort to display product images as accurately as possible, but variations can occur.
         </p>
@@ -46,7 +46,7 @@ export default function TermsOfServicePage() {
           We offer island-wide shipping in Sri Lanka. Orders are typically processed and shipped within 1–2 business days. 
           Delivery takes 2–5 business days depending on location. 
           Free delivery is automatically applied on all orders exceeding LKR 3,000. 
-          Hush Craft is not liable for shipping delays caused by unexpected courier service issues.
+          Hush Crafts is not liable for shipping delays caused by unexpected courier service issues.
         </p>
       ),
     },
@@ -66,7 +66,7 @@ export default function TermsOfServicePage() {
       title: '5. Intellectual Property and Governing Law',
       content: (
         <p>
-          All content included on this website, including designs, text, logos, custom images, graphics, and animations, is the property of Hush Craft and is protected by intellectual property laws. 
+          All content included on this website, including designs, text, logos, custom images, graphics, and animations, is the property of Hush Crafts and is protected by intellectual property laws. 
           These terms and agreements are governed by and construed in accordance with the laws of Sri Lanka.
         </p>
       ),
@@ -95,7 +95,7 @@ export default function TermsOfServicePage() {
             Last updated: <span className="text-foreground">{lastUpdated}</span>
           </p>
           <p className="text-base text-muted-foreground leading-relaxed">
-            Welcome to Hush Craft. By using our website or placing an order, you agree to comply with and be bound by the following terms and conditions. Please read them carefully.
+            Welcome to Hush Crafts. By using our website or placing an order, you agree to comply with and be bound by the following terms and conditions. Please read them carefully.
           </p>
         </div>
 

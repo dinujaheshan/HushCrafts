@@ -87,7 +87,7 @@ export default function TestimonialSlider({ testimonials }: TestimonialSliderPro
           <span className="text-primary italic">Across Sri Lanka</span>
         </h2>
         <p className="text-muted-foreground text-sm leading-relaxed max-w-sm">
-          Hear from our beautiful community who experience the handcrafted elegance, comfort, and premium quality of Hush Craft.
+          Hear from our beautiful community who experience the handcrafted elegance, comfort, and premium quality of Hush Crafts.
         </p>
 
         {/* Brand Rating Summary */}

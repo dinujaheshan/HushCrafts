@@ -22,7 +22,7 @@ export default function Footer() {
           <div className="flex flex-col md:flex-row items-center justify-between gap-6">
             <div>
               <h3 className="font-serif text-2xl font-semibold text-white">
-                Join the Hush Craft Family
+                Join the Hush Crafts Family
               </h3>
               <p className="text-white/60 text-sm mt-1">
                 Get exclusive offers, new arrivals & styling tips directly in your inbox.
@@ -54,12 +54,12 @@ export default function Footer() {
               <div className="relative w-12 h-12 rounded-full overflow-hidden border border-white/20">
                 <Image 
                   src="/images/logo.jpg" 
-                  alt="Hush Craft Logo" 
+                  alt="Hush Crafts Logo" 
                   fill 
                   className="object-cover"
                 />
               </div>
-              <span className="font-serif text-2xl font-semibold text-primary">Hush Craft</span>
+              <span className="font-serif text-2xl font-semibold text-primary">Hush Crafts</span>
             </Link>
             <p className="text-white/50 text-sm mt-3 leading-relaxed max-w-sm">
               Handcrafted slippers made with love in Sri Lanka. Premium quality, unique designs to elevate your everyday style.
@@ -141,7 +141,7 @@ export default function Footer() {
       <div className="border-t border-white/10">
         <div className="container mx-auto px-4 py-5 flex flex-col md:flex-row items-center justify-between gap-3">
           <p className="text-white/30 text-xs">
-            © {year} Hush Craft. All rights reserved.
+            © {year} Hush Crafts. All rights reserved.
           </p>
           <div className="flex gap-5 text-xs text-white/30">
             <Link href="/privacy" className="hover:text-white/60 transition-colors">Privacy Policy</Link>
