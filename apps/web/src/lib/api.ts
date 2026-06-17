@@ -197,6 +197,8 @@ export async function submitCheckout(payload: {
     postalCode: string | null;
   } | null;
   paymentMethod?: string;
+  bankDetails?: { bankName: string; accountNumber: string; nic: string };
+  codDetails?: { courierName: string; deliveryFee: number };
   items: Array<{ productId: string; variantId: string; sku: string; quantity: number }>;
   couponCode?: string | null;
   notes?: string | null;
