@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useParams, notFound } from 'next/navigation';
+import { useParams, useRouter, notFound } from 'next/navigation';
 import {
   Star, ShoppingBag, Heart, Share2, ChevronLeft, Check,
   Truck, Shield, RefreshCw, Package
@@ -13,10 +13,13 @@ import { useCartStore } from '@/store/cartStore';
 import { useWishlistStore } from '@/store/wishlistStore';
 import RelatedProducts from '@/components/RelatedProducts';
 import Reviews from '@/components/Reviews';
+import { useAuthStore } from '@/store/authStore';
 
 export default function ProductDetailPage() {
   const params = useParams();
+  const router = useRouter();
   const productId = params.id as string;
+  const user = useAuthStore(s => s.user);
 
   const [product, setProduct] = useState<any>(null);
   const [loading, setLoading] = useState(true);
@@ -71,6 +74,27 @@ export default function ProductDetailPage() {
       navigator.clipboard.writeText(window.location.href);
       alert('Link copied to clipboard!');
     }
+  }
+
+  function handleBuyNow() {
+    if (!product) return;
+
+    const params = new URLSearchParams({
+      buyNow: 'true',
+      productId: product.id,
+      variantId: selectedVariant?.id || `${product.id}-default`,
+      sku: selectedVariant?.sku || product.id,
+      qty: quantity.toString()
+    });
+
+    const checkoutUrl = `/checkout?${params.toString()}`;
+
+    if (!user) {
+      router.push(`/login?redirect=${encodeURIComponent(checkoutUrl)}`);
+      return;
+    }
+
+    router.push(checkoutUrl);
   }
 
   if (loading) {
@@ -351,16 +375,7 @@ export default function ProductDetailPage() {
 
             {/* Checkout link */}
             <button
-              onClick={() => {
-                const params = new URLSearchParams({
-                  buyNow: 'true',
-                  productId: product.id,
-                  variantId: selectedVariant?.id || `${product.id}-default`,
-                  sku: selectedVariant?.sku || product.id,
-                  qty: quantity.toString()
-                });
-                window.location.href = `/checkout?${params.toString()}`;
-              }}
+              onClick={handleBuyNow}
               className="flex items-center justify-center gap-2 w-full py-3.5 border-2 border-primary text-primary rounded-xl font-semibold hover:bg-primary/5 transition-colors"
             >
               Buy Now

@@ -150,9 +150,13 @@ function CheckoutContent() {
     let paymentProofUrl: string | null = null;
     let paymentProofPublicId: string | null = null;
 
-    if (data.paymentMethod === 'bank_transfer' && !paymentProofFile) {
+    if ((data.paymentMethod === 'bank_transfer' || data.paymentMethod === 'cod') && !paymentProofFile) {
       setSubmitting(false);
-      setError('Please upload your bank transfer slip to continue.');
+      setError(
+        data.paymentMethod === 'cod'
+          ? 'Please upload a payment slip or confirmation note to continue.'
+          : 'Please upload your bank transfer slip to continue.'
+      );
       return;
     }
 
@@ -767,8 +771,13 @@ function CheckoutContent() {
                     <div className="p-4 bg-blue-500/10 rounded-xl border border-blue-500/20">
                       <p className="text-sm font-semibold text-blue-700 dark:text-blue-400 mb-1">🏦 BANK TRANSFER</p>
                       <p className="text-xs text-muted-foreground mb-3">
-                        Please upload your bank transfer slip after sending the payment of <strong className="text-foreground">LKR {total.toLocaleString()}</strong>.
+                        Please transfer the full order amount of <strong className="text-foreground">LKR {total.toLocaleString()}</strong> to our official bank account, then upload the slip below for verification.
                       </p>
+                      <div className="rounded-xl border border-blue-500/15 bg-background/60 p-3 mb-3 space-y-1 text-xs">
+                        <p><span className="font-semibold text-foreground">Account Name:</span> Hush Crafts</p>
+                        <p><span className="font-semibold text-foreground">Reference:</span> Use your order ID or full name</p>
+                        <p><span className="font-semibold text-foreground">Verification:</span> Upload the payment slip before submitting your order</p>
+                      </div>
                       <input
                         type="file"
                         accept="image/*,.pdf"
@@ -783,7 +792,7 @@ function CheckoutContent() {
                     <div className="p-4 bg-amber-500/10 rounded-xl border border-amber-500/20">
                       <p className="text-sm font-semibold text-amber-700 dark:text-amber-400 mb-1">🚚 CASH ON DELIVERY (COD)</p>
                       <p className="text-xs text-muted-foreground mb-3">
-                        Upload the payment slip or confirmation note for your COD order total of <strong className="text-foreground">LKR {total.toLocaleString()}</strong>.
+                        Your COD order will not be treated as complete until a payment slip or confirmation note is uploaded for the total of <strong className="text-foreground">LKR {total.toLocaleString()}</strong>.
                       </p>
                       <input
                         type="file"

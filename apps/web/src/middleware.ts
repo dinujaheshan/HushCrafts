@@ -32,7 +32,9 @@ export function middleware(request: NextRequest) {
 
   // If it's a protected route and no client session exists, redirect to login
   if (isProtectedPath && !sessionToken) {
-    return NextResponse.redirect(new URL('/login', request.url));
+    const loginUrl = new URL('/login', request.url);
+    loginUrl.searchParams.set('redirect', pathname + request.nextUrl.search);
+    return NextResponse.redirect(loginUrl);
   }
 
   // If it's an auth route and client session exists, redirect to home
