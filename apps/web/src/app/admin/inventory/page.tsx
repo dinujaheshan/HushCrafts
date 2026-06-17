@@ -27,7 +27,7 @@ export default function AdminInventoryPage() {
 
   // Permission Guard
   const admin = useAdminAuthStore(s => s.admin);
-  const canWrite = admin?.role === 'super_admin' || admin?.permissions.manageInventory;
+  const canWrite = admin?.role === 'super_admin' || (admin?.permissions?.inventoryUpdate ?? admin?.permissions?.manageInventory);
 
   const fetchInventory = async () => {
     setLoading(true);

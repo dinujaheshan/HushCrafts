@@ -18,7 +18,8 @@ export default function AdminFeedbacksPage() {
 
   // Permission Guard
   const admin = useAdminAuthStore(s => s.admin);
-  const canWrite = admin?.role === 'super_admin' || admin?.permissions.manageFeedbacks;
+  const canApprove = admin?.role === 'super_admin' || (admin?.permissions?.feedbackApprove ?? admin?.permissions?.manageFeedbacks);
+  const canDelete = admin?.role === 'super_admin' || (admin?.permissions?.feedbackDelete ?? admin?.permissions?.manageFeedbacks);
 
   const loadFeedbacksData = async () => {
     setLoading(true);
@@ -71,7 +72,7 @@ export default function AdminFeedbacksPage() {
   }, []);
 
   const handleApprove = async (reviewId: string) => {
-    if (!canWrite) return;
+    if (!canApprove) return;
     try {
       await updateDoc(doc(db, 'reviews', reviewId), {
         isApproved: true
@@ -87,7 +88,7 @@ export default function AdminFeedbacksPage() {
   };
 
   const handleDelete = async (reviewId: string) => {
-    if (!canWrite) return;
+    if (!canDelete) return;
     if (!confirm('Are you sure you want to permanently delete this customer review?')) return;
 
     try {
@@ -252,26 +253,25 @@ export default function AdminFeedbacksPage() {
                     {/* Actions */}
                     <td className="px-6 py-4">
                       <div className="flex items-center justify-end gap-1.5">
-                        {canWrite ? (
-                          <>
-                            {review.isApproved === false && (
-                              <button
-                                onClick={() => handleApprove(review.id)}
-                                className="w-8 h-8 flex items-center justify-center rounded-xl border border-green-200 dark:border-green-900 bg-card hover:bg-green-500/10 transition-colors text-muted-foreground hover:text-green-600 cursor-pointer"
-                                title="Approve Feedback"
-                              >
-                                <Check size={14} />
-                              </button>
-                            )}
-                            <button
-                              onClick={() => handleDelete(review.id)}
-                              className="w-8 h-8 flex items-center justify-center rounded-xl border border-border bg-card hover:bg-red-500/10 transition-colors text-muted-foreground hover:text-red-500 cursor-pointer"
-                              title="Delete Feedback"
-                            >
-                              <Trash2 size={14} />
-                            </button>
-                          </>
-                        ) : (
+                        {canApprove && review.isApproved === false && (
+                          <button
+                            onClick={() => handleApprove(review.id)}
+                            className="w-8 h-8 flex items-center justify-center rounded-xl border border-green-200 dark:border-green-900 bg-card hover:bg-green-500/10 transition-colors text-muted-foreground hover:text-green-600 cursor-pointer"
+                            title="Approve Feedback"
+                          >
+                            <Check size={14} />
+                          </button>
+                        )}
+                        {canDelete && (
+                          <button
+                            onClick={() => handleDelete(review.id)}
+                            className="w-8 h-8 flex items-center justify-center rounded-xl border border-border bg-card hover:bg-red-500/10 transition-colors text-muted-foreground hover:text-red-500 cursor-pointer"
+                            title="Delete Feedback"
+                          >
+                            <Trash2 size={14} />
+                          </button>
+                        )}
+                        {!canApprove && !canDelete && (
                           <span className="text-[10px] font-bold text-slate-400 uppercase">Read Only</span>
                         )}
                       </div>

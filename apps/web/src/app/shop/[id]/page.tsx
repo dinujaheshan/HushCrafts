@@ -149,7 +149,7 @@ export default function ProductDetailPage() {
           <span>/</span>
           <Link href="/shop" className="hover:text-foreground transition-colors">Shop</Link>
           <span>/</span>
-          <span className="text-foreground">{product.name}</span>
+          <h3 className="font-bold text-black" style={{ fontFamily: 'var(--font-sans)' }}>{product.name}</h3>
         </nav>
 
         <div className="grid md:grid-cols-2 gap-10 lg:gap-16">

@@ -25,12 +25,28 @@ export default function AdminSettingsPage() {
   // Selected permissions for new admin
   const [permissions, setPermissions] = useState({
     manageProducts: true,
+    productCreate: true,
+    productUpdate: true,
+    productDelete: true,
+    manageCategories: true,
+    categoryCreate: true,
+    categoryUpdate: true,
+    categoryDelete: true,
     manageInventory: true,
+    inventoryUpdate: true,
     manageOrders: true,
+    orderUpdate: true,
+    orderDelete: true,
     manageCustomers: false,
+    customerUpdate: false,
+    customerDelete: false,
     manageAnalytics: false,
     manageFeedbacks: false,
+    feedbackApprove: false,
+    feedbackDelete: false,
     manageMessages: false,
+    messageReply: false,
+    messageDelete: false,
     manageAdmins: false
   });
 
@@ -146,16 +162,9 @@ export default function AdminSettingsPage() {
         email,
         role,
         isActive: true,
-        permissions: {
-          manageProducts: role === 'super_admin' ? true : permissions.manageProducts,
-          manageInventory: role === 'super_admin' ? true : permissions.manageInventory,
-          manageOrders: role === 'super_admin' ? true : permissions.manageOrders,
-          manageCustomers: role === 'super_admin' ? true : permissions.manageCustomers,
-          manageAnalytics: role === 'super_admin' ? true : permissions.manageAnalytics,
-          manageFeedbacks: role === 'super_admin' ? true : permissions.manageFeedbacks,
-          manageMessages: role === 'super_admin' ? true : permissions.manageMessages,
-          manageAdmins: role === 'super_admin' ? true : permissions.manageAdmins,
-        },
+        permissions: role === 'super_admin' 
+          ? Object.keys(permissions).reduce((acc, key) => ({ ...acc, [key]: true }), {})
+          : permissions,
         createdAt: new Date().toISOString()
       };
 
@@ -168,12 +177,28 @@ export default function AdminSettingsPage() {
       setRole('admin');
       setPermissions({
         manageProducts: true,
+        productCreate: true,
+        productUpdate: true,
+        productDelete: true,
+        manageCategories: true,
+        categoryCreate: true,
+        categoryUpdate: true,
+        categoryDelete: true,
         manageInventory: true,
+        inventoryUpdate: true,
         manageOrders: true,
+        orderUpdate: true,
+        orderDelete: true,
         manageCustomers: false,
+        customerUpdate: false,
+        customerDelete: false,
         manageAnalytics: false,
         manageFeedbacks: false,
+        feedbackApprove: false,
+        feedbackDelete: false,
         manageMessages: false,
+        messageReply: false,
+        messageDelete: false,
         manageAdmins: false
       });
 
@@ -240,12 +265,28 @@ export default function AdminSettingsPage() {
                       const isSelf = a.uid === currentAdmin?.uid;
                       const adminPermissions = a.permissions || {
                         manageProducts: false,
+                        productCreate: false,
+                        productUpdate: false,
+                        productDelete: false,
+                        manageCategories: false,
+                        categoryCreate: false,
+                        categoryUpdate: false,
+                        categoryDelete: false,
                         manageInventory: false,
+                        inventoryUpdate: false,
                         manageOrders: false,
+                        orderUpdate: false,
+                        orderDelete: false,
                         manageCustomers: false,
+                        customerUpdate: false,
+                        customerDelete: false,
                         manageAnalytics: false,
                         manageFeedbacks: false,
+                        feedbackApprove: false,
+                        feedbackDelete: false,
                         manageMessages: false,
+                        messageReply: false,
+                        messageDelete: false,
                         manageAdmins: false
                       };
 
@@ -270,26 +311,52 @@ export default function AdminSettingsPage() {
                                 <CheckCircle2 size={12} /> Unrestricted System Override
                               </span>
                             ) : (
-                              <div className="flex flex-wrap gap-x-4 gap-y-2">
+                              <div className="flex flex-wrap gap-2">
                                 {[
-                                  { label: 'Products', key: 'manageProducts' },
-                                  { label: 'Inventory', key: 'manageInventory' },
-                                  { label: 'Orders', key: 'manageOrders' },
-                                  { label: 'Customers', key: 'manageCustomers' },
-                                  { label: 'Feedbacks', key: 'manageFeedbacks' },
-                                  { label: 'Messages', key: 'manageMessages' },
+                                  { label: 'Products', key: 'manageProducts', sub: [
+                                    { label: 'Create', key: 'productCreate' }, { label: 'Update', key: 'productUpdate' }, { label: 'Delete', key: 'productDelete' }
+                                  ]},
+                                  { label: 'Categories', key: 'manageCategories', sub: [
+                                    { label: 'Create', key: 'categoryCreate' }, { label: 'Update', key: 'categoryUpdate' }, { label: 'Delete', key: 'categoryDelete' }
+                                  ]},
+                                  { label: 'Inventory', key: 'manageInventory', sub: [{ label: 'Update', key: 'inventoryUpdate' }]},
+                                  { label: 'Orders', key: 'manageOrders', sub: [{ label: 'Update', key: 'orderUpdate' }, { label: 'Delete', key: 'orderDelete' }]},
+                                  { label: 'Customers', key: 'manageCustomers', sub: [{ label: 'Update', key: 'customerUpdate' }, { label: 'Delete', key: 'customerDelete' }]},
+                                  { label: 'Feedbacks', key: 'manageFeedbacks', sub: [{ label: 'Approve', key: 'feedbackApprove' }, { label: 'Delete', key: 'feedbackDelete' }]},
+                                  { label: 'Messages', key: 'manageMessages', sub: [{ label: 'Reply', key: 'messageReply' }, { label: 'Delete', key: 'messageDelete' }]},
                                   { label: 'Analytics', key: 'manageAnalytics' },
                                   { label: 'Admin Access', key: 'manageAdmins' },
                                 ].map(p => (
-                                  <label key={p.key} className="flex items-center gap-1.5 text-xs text-slate-600 dark:text-slate-300 font-semibold cursor-pointer">
-                                    <input
-                                      type="checkbox"
-                                      checked={adminPermissions[p.key] || false}
-                                      onChange={() => handlePermissionToggle(a.uid, p.key, adminPermissions[p.key])}
-                                      className="w-3.5 h-3.5 border border-border rounded text-primary focus:ring-primary focus:ring-offset-background cursor-pointer"
-                                    />
-                                    {p.label}
-                                  </label>
+                                  <div key={p.key} className="flex flex-col gap-1.5 border border-border/50 p-2 rounded-xl bg-background/30 w-[180px]">
+                                    <label className="flex items-center gap-1.5 text-xs text-foreground font-bold cursor-pointer">
+                                      <input
+                                        type="checkbox"
+                                        checked={adminPermissions[p.key] || false}
+                                        onChange={() => handlePermissionToggle(a.uid, p.key, adminPermissions[p.key])}
+                                        className="w-3.5 h-3.5 border border-border rounded text-primary focus:ring-primary focus:ring-offset-background cursor-pointer"
+                                      />
+                                      {p.label}
+                                    </label>
+                                    {p.sub && (
+                                      <div className="flex flex-col gap-1 ml-5 mt-0.5">
+                                        {p.sub.map(s => {
+                                          const isChecked = adminPermissions[s.key] ?? adminPermissions[p.key] ?? false;
+                                          return (
+                                            <label key={s.key} className={`flex items-center gap-1 text-[10px] font-medium ${adminPermissions[p.key] ? 'text-muted-foreground cursor-pointer' : 'text-muted-foreground/40 cursor-not-allowed'}`}>
+                                              <input
+                                                type="checkbox"
+                                                checked={isChecked}
+                                                disabled={!adminPermissions[p.key]}
+                                                onChange={() => handlePermissionToggle(a.uid, s.key, isChecked)}
+                                                className="w-3 h-3 border border-border rounded text-primary focus:ring-primary disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
+                                              />
+                                              {s.label}
+                                            </label>
+                                          );
+                                        })}
+                                      </div>
+                                    )}
+                                  </div>
                                 ))}
                               </div>
                             )}
@@ -415,26 +482,49 @@ export default function AdminSettingsPage() {
               {role === 'admin' && (
                 <div className="space-y-2.5 pt-2 border-t border-border">
                   <label className="block text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Initial Permissions</label>
-                  <div className="space-y-2">
+                  <div className="space-y-3">
                     {[
-                      { label: 'Manage Slippers/Products', key: 'manageProducts' },
-                      { label: 'Update Stock Levels', key: 'manageInventory' },
-                      { label: 'Process Store Orders', key: 'manageOrders' },
-                      { label: 'View Customer Data', key: 'manageCustomers' },
-                      { label: 'Moderate Feedbacks', key: 'manageFeedbacks' },
-                      { label: 'Reply Support Messages', key: 'manageMessages' },
+                      { label: 'Manage Products', key: 'manageProducts', sub: [
+                        { label: 'Create', key: 'productCreate' }, { label: 'Update', key: 'productUpdate' }, { label: 'Delete', key: 'productDelete' }
+                      ]},
+                      { label: 'Manage Categories', key: 'manageCategories', sub: [
+                        { label: 'Create', key: 'categoryCreate' }, { label: 'Update', key: 'categoryUpdate' }, { label: 'Delete', key: 'categoryDelete' }
+                      ]},
+                      { label: 'Update Stock Levels', key: 'manageInventory', sub: [{ label: 'Update', key: 'inventoryUpdate' }]},
+                      { label: 'Process Store Orders', key: 'manageOrders', sub: [{ label: 'Update', key: 'orderUpdate' }, { label: 'Delete', key: 'orderDelete' }]},
+                      { label: 'View Customer Data', key: 'manageCustomers', sub: [{ label: 'Update', key: 'customerUpdate' }, { label: 'Delete', key: 'customerDelete' }]},
+                      { label: 'Moderate Feedbacks', key: 'manageFeedbacks', sub: [{ label: 'Approve', key: 'feedbackApprove' }, { label: 'Delete', key: 'feedbackDelete' }]},
+                      { label: 'Reply Support Messages', key: 'manageMessages', sub: [{ label: 'Reply', key: 'messageReply' }, { label: 'Delete', key: 'messageDelete' }]},
                       { label: 'View Performance Analytics', key: 'manageAnalytics' },
                       { label: 'Manage Admin Access', key: 'manageAdmins' }
                     ].map(p => (
-                      <label key={p.key} className="flex items-center gap-2 text-xs text-slate-600 dark:text-slate-300 font-bold cursor-pointer">
-                        <input
-                          type="checkbox"
-                          checked={(permissions as any)[p.key]}
-                          onChange={() => setPermissions(prev => ({ ...prev, [p.key]: !(prev as any)[p.key] }))}
-                          className="w-4 h-4 border border-border rounded text-primary focus:ring-primary focus:ring-offset-background cursor-pointer"
-                        />
-                        {p.label}
-                      </label>
+                      <div key={p.key} className="space-y-1.5">
+                        <label className="flex items-center gap-2 text-xs text-slate-700 dark:text-slate-200 font-bold cursor-pointer">
+                          <input
+                            type="checkbox"
+                            checked={(permissions as any)[p.key]}
+                            onChange={() => setPermissions(prev => ({ ...prev, [p.key]: !(prev as any)[p.key] }))}
+                            className="w-4 h-4 border border-border rounded text-primary focus:ring-primary focus:ring-offset-background cursor-pointer"
+                          />
+                          {p.label}
+                        </label>
+                        {p.sub && (
+                          <div className="flex flex-wrap gap-3 ml-6">
+                            {p.sub.map(s => (
+                              <label key={s.key} className={`flex items-center gap-1.5 text-[10px] font-medium ${(permissions as any)[p.key] ? 'text-muted-foreground cursor-pointer' : 'text-muted-foreground/40 cursor-not-allowed'}`}>
+                                <input
+                                  type="checkbox"
+                                  checked={(permissions as any)[s.key]}
+                                  disabled={!(permissions as any)[p.key]}
+                                  onChange={() => setPermissions(prev => ({ ...prev, [s.key]: !(prev as any)[s.key] }))}
+                                  className="w-3.5 h-3.5 border border-border rounded text-primary focus:ring-primary focus:ring-offset-background disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
+                                />
+                                {s.label}
+                              </label>
+                            ))}
+                          </div>
+                        )}
+                      </div>
                     ))}
                   </div>
                 </div>

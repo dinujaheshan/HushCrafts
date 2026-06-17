@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { ShoppingBag, Menu, X, Search, Heart, User, Sun, Moon, LogOut, Bell } from '@/components/MaterialIcons';
 import Image from 'next/image';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useCartStore } from '@/store/cartStore';
 import { useWishlistStore } from '@/store/wishlistStore';
 import { useTheme } from 'next-themes';
@@ -20,6 +20,8 @@ export default function Navbar() {
   const router = useRouter();
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const searchParams = useSearchParams();
+  const sort = searchParams?.get('sort');
   const [mounted, setMounted] = useState(false);
   const [cacheBuster, setCacheBuster] = useState('');
   const cartOpen = useUiStore(s => s.isCartOpen);
@@ -463,9 +465,9 @@ export default function Navbar() {
         {/* Categories Bottom Bar */}
         <div className="hidden md:block bg-background border-b border-border shadow-sm">
           <div className="container mx-auto px-4 flex items-center justify-center gap-10 h-10 text-sm font-semibold">
-             <Link href="/shop" className="text-foreground/80 hover:text-primary transition-colors uppercase tracking-wide">Shop</Link>
-             <Link href="/shop?sort=newest" className="text-foreground/80 hover:text-primary transition-colors uppercase tracking-wide">New Arrivals</Link>
-             <Link href="/shop?sort=hotitems" className="text-foreground/80 hover:text-primary transition-colors flex items-center gap-1.5 uppercase tracking-wide"><span className="w-2 h-2 rounded-full bg-destructive animate-pulse" /> Hot Items</Link>
+            <Link href="/shop" className={`text-foreground/80 hover:text-primary transition-colors uppercase tracking-wide ${!sort ? 'font-bold text-primary' : ''}`}>Shop</Link>
+            <Link href="/shop?sort=newest" className={`text-foreground/80 hover:text-primary transition-colors uppercase tracking-wide ${sort === 'newest' ? 'font-bold text-primary' : ''}`}>New Arrivals</Link>
+            <Link href="/shop?sort=hotitems" className={`text-foreground/80 hover:text-primary transition-colors flex items-center gap-1.5 uppercase tracking-wide ${sort === 'hotitems' ? 'font-bold text-primary' : ''}`}><span className="w-2 h-2 rounded-full bg-destructive animate-pulse" /> Hot Items</Link>
           </div>
         </div>
       </header>

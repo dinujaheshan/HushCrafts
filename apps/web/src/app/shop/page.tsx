@@ -51,7 +51,8 @@ async function ShopContent({ searchParams }: { searchParams: SearchParams }) {
     } else if (searchParams.sort === 'price-desc') {
       products.sort((a, b) => b.basePrice - a.basePrice);
     } else if (searchParams.sort === 'hotitems') {
-      products.sort((a, b) => (b.isBestSeller ? 1 : 0) - (a.isBestSeller ? 1 : 0));
+      // Show only hot items (best sellers)
+      products = products.filter(p => p.isBestSeller);
     }
   }
 

@@ -5,59 +5,62 @@ service cloud.firestore {
     function isAuthenticated() {
       return request.auth != null;
     }
+    function getAdmin() {
+      return get(/databases/$(database)/documents/admins/$(request.auth.uid)).data;
+    }
     function isAdmin() {
-      return isAuthenticated() && request.auth.token.role != null;
+      return isAuthenticated() && exists(/databases/$(database)/documents/admins/$(request.auth.uid));
     }
     function hasPermission(permission) {
-      return isAdmin() && request.auth.token.permissions != null && permission in request.auth.token.permissions;
+      return isAdmin() && (getAdmin().role == 'super_admin' || getAdmin().permissions.get(permission, false) == true);
     }
 
     // users
     match /users/{userId} {
       allow read: if isAuthenticated() && (request.auth.uid == userId || isAdmin());
-      allow write: if isAdmin() && hasPermission('users.update');
+      allow write: if isAdmin() && hasPermission('customerUpdate');
     }
 
     // roles
     match /roles/{roleId} {
       allow read: if isAuthenticated();
-      allow write: if isAdmin() && hasPermission('settings.update');
+      allow write: if isAdmin() && hasPermission('manageAdmins');
     }
 
     // permissions
     match /permissions/{permissionId} {
       allow read: if isAuthenticated();
-      allow write: if isAdmin() && hasPermission('settings.update');
+      allow write: if isAdmin() && hasPermission('manageAdmins');
     }
 
     // user_roles
     match /user_roles/{userId} {
       allow read: if isAuthenticated() && (request.auth.uid == userId || isAdmin());
-      allow write: if isAdmin() && hasPermission('settings.update');
+      allow write: if isAdmin() && hasPermission('manageAdmins');
     }
 
     // products
     match /products/{productId} {
       allow read: if resource.data.status == 'published' || isAdmin();
-      allow write: if isAdmin() && (hasPermission('products.create') || hasPermission('products.update') || hasPermission('products.delete'));
+      allow write: if isAdmin() && (hasPermission('productCreate') || hasPermission('productUpdate') || hasPermission('productDelete'));
       
       // subcollection variants
       match /variants/{variantId} {
         allow read: if true; // variants are readable if public can see them
-        allow write: if isAdmin() && (hasPermission('products.create') || hasPermission('products.update'));
+        allow write: if isAdmin() && (hasPermission('productCreate') || hasPermission('productUpdate'));
       }
     }
 
     // categories
     match /categories/{categoryId} {
       allow read: if true;
-      allow write: if isAdmin() && hasPermission('products.update');
+      allow write: if isAdmin() && (hasPermission('categoryCreate') || hasPermission('categoryUpdate') || hasPermission('categoryDelete'));
     }
 
     // inventory
     match /inventory/{sku} {
       allow read: if isAdmin();
-      allow write: if isAdmin() && hasPermission('inventory.update');
+      allow write: if isAdmin() && hasPermission('inventoryUpdate');
     }
 
     // orders
@@ -68,12 +71,12 @@ service cloud.firestore {
         (resource.data.customerDetails != null && resource.data.customerDetails.email == request.auth.token.email)
       ));
       allow create: if true; // Anonymous guest checkouts permitted
-      allow update: if isAdmin() && hasPermission('orders.update');
-      allow delete: if isAdmin() && hasPermission('orders.delete');
+      allow update: if isAdmin() && hasPermission('orderUpdate');
+      allow delete: if isAdmin() && hasPermission('orderDelete');
       
       match /items/{itemId} {
         allow read: if isAdmin() || (isAuthenticated() && get(/databases/$(database)/documents/orders/$(orderId)).data.customerId == request.auth.uid);
-        allow write: if isAdmin() && hasPermission('orders.update');
+        allow write: if isAdmin() && hasPermission('orderUpdate');
       }
     }
 
@@ -81,8 +84,8 @@ service cloud.firestore {
     match /customers/{customerId} {
       allow read: if isAdmin() || (isAuthenticated() && request.auth.uid == customerId);
       allow create: if true; // customers can register or be created on guest checkout
-      allow update: if isAdmin() && hasPermission('customers.update');
-      allow delete: if isAdmin() && hasPermission('settings.update');
+      allow update: if isAdmin() && hasPermission('customerUpdate');
+      allow delete: if isAdmin() && hasPermission('customerDelete');
 
       match /addresses/{addressId} {
         allow read, write: if isAdmin() || (isAuthenticated() && request.auth.uid == customerId);
@@ -103,7 +106,23 @@ service cloud.firestore {
     match /reviews/{reviewId} {
       allow read: if resource.data.isApproved == true || isAdmin();
       allow create: if true; // customers can write reviews
-      allow update, delete: if isAdmin() && hasPermission('products.update');
+      allow update: if isAdmin() && hasPermission('feedbackApprove');
+      allow delete: if isAdmin() && hasPermission('feedbackDelete');
+    }
+
+    // contact_messages
+    match /contact_messages/{msgId} {
+      allow read: if isAdmin();
+      allow create: if true; // guests can send messages
+      allow update: if isAdmin() && hasPermission('messageReply');
+      allow delete: if isAdmin() && hasPermission('messageDelete');
+    }
+
+    // client_notifications
+    match /client_notifications/{notifId} {
+      allow read: if true;
+      allow create: if isAdmin() && hasPermission('messageReply');
+      allow update, delete: if true;
     }
 
     // coupons
@@ -137,7 +156,7 @@ service cloud.firestore {
     }
     match /media_library/{mediaId} {
       allow read: if true;
-      allow write: if isAdmin() && hasPermission('products.update');
+      allow write: if isAdmin() && hasPermission('productCreate');
     }
   }
 }

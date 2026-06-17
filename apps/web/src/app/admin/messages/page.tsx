@@ -22,7 +22,8 @@ export default function AdminMessagesPage() {
 
   // Permission Guard
   const admin = useAdminAuthStore(s => s.admin);
-  const canWrite = admin?.role === 'super_admin' || admin?.permissions.manageMessages;
+  const canReply = admin?.role === 'super_admin' || (admin?.permissions?.messageReply ?? admin?.permissions?.manageMessages);
+  const canDelete = admin?.role === 'super_admin' || (admin?.permissions?.messageDelete ?? admin?.permissions?.manageMessages);
 
   const fetchMessages = async () => {
     setLoading(true);
@@ -77,7 +78,7 @@ export default function AdminMessagesPage() {
 
   const handleSendReply = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!canWrite || !selectedMessage || !replyText.trim()) return;
+    if (!canReply || !selectedMessage || !replyText.trim()) return;
 
     setSendingReply(true);
     try {
@@ -118,7 +119,7 @@ export default function AdminMessagesPage() {
   };
 
   const handleDeleteMessage = async (msgId: string) => {
-    if (!canWrite) return;
+    if (!canDelete) return;
     if (!confirm('Are you sure you want to permanently delete this message record?')) return;
 
     try {
@@ -260,7 +261,7 @@ export default function AdminMessagesPage() {
                         >
                           {msg.status === 'replied' ? 'View Reply' : 'Compose Reply'}
                         </button>
-                        {canWrite && (
+                        {canDelete && (
                           <button
                             onClick={() => handleDeleteMessage(msg.id)}
                             className="w-8 h-8 flex items-center justify-center rounded-xl border border-border bg-card hover:bg-red-500/10 transition-colors text-muted-foreground hover:text-red-500 cursor-pointer"
@@ -321,7 +322,7 @@ export default function AdminMessagesPage() {
                   </label>
                   <textarea
                     required
-                    disabled={selectedMessage.status === 'replied' || !canWrite}
+                    disabled={selectedMessage.status === 'replied' || !canReply}
                     rows={6}
                     value={replyText}
                     onChange={e => setReplyText(e.target.value)}
@@ -348,7 +349,7 @@ export default function AdminMessagesPage() {
                   {selectedMessage.status === 'pending' && (
                     <button
                       type="submit"
-                      disabled={sendingReply || !canWrite}
+                      disabled={sendingReply || !canReply}
                       className="flex-1 py-3 bg-primary text-primary-foreground rounded-xl text-xs font-bold uppercase tracking-wider hover:bg-primary/95 transition-all shadow-md shadow-primary/10 flex items-center justify-center gap-2 cursor-pointer"
                     >
                       {sendingReply ? (

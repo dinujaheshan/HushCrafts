@@ -53,58 +53,58 @@ app.get('/api/v1/admin/dashboard/revenue-chart', DashboardController.getRevenueC
 // Orders management
 app.get(
   '/api/v1/admin/orders',
-  requirePermission('orders.read'),
+  requirePermission('manageOrders'),
   OrderController.list
 );
 app.patch(
   '/api/v1/admin/orders/:id/status',
-  requirePermission('orders.update'),
+  requirePermission('orderUpdate'),
   OrderController.updateStatus
 );
 
 // Product management
 app.post(
   '/api/v1/admin/products',
-  requirePermission('products.write'),
+  requirePermission('productCreate'),
   ProductController.create
 );
 app.patch(
   '/api/v1/admin/products/:id',
-  requirePermission('products.write'),
+  requirePermission('productUpdate'),
   ProductController.update
 );
 app.delete(
   '/api/v1/admin/products/:id',
-  requirePermission('products.delete'),
+  requirePermission('productDelete'),
   ProductController.remove
 );
 
 // Category management
 app.post(
   '/api/v1/admin/categories',
-  requirePermission('products.write'),
+  requirePermission('categoryCreate'),
   CategoryController.create
 );
 app.patch(
   '/api/v1/admin/categories/:id',
-  requirePermission('products.write'),
+  requirePermission('categoryUpdate'),
   CategoryController.update
 );
 app.delete(
   '/api/v1/admin/categories/:id',
-  requirePermission('products.delete'),
+  requirePermission('categoryDelete'),
   CategoryController.remove
 );
 
 // Inventory management
 app.put(
   '/api/v1/admin/inventory/:sku',
-  requirePermission('inventory.update'),
+  requirePermission('inventoryUpdate'),
   InventoryController.updateStock
 );
 app.get(
   '/api/v1/admin/inventory',
-  requirePermission('inventory.read'),
+  requirePermission('manageInventory'),
   InventoryController.list
 );
 

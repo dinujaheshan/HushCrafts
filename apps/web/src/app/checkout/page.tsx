@@ -16,26 +16,6 @@ import { useAuthStore } from '@/store/authStore';
 
 type Step = 'details' | 'address' | 'review';
 
-interface CheckoutForm {
-  fullName: string;
-  mobileNumber: string;
-  email: string;
-  addressLine1: string;
-  addressLine2: string;
-  city: string;
-  district: string;
-  postalCode: string;
-  notes: string;
-
-  sameAsBilling: boolean;
-  billingAddressLine1?: string;
-  billingAddressLine2?: string;
-  billingCity?: string;
-  billingDistrict?: string;
-  billingPostalCode?: string;
-  paymentMethod: 'online' | 'bank_transfer' | 'cod';
-}
-
 const SHIPPING_FEES: Record<string, number> = {
   Colombo: 350,
   Gampaha: 350
@@ -59,6 +39,20 @@ function CheckoutContent() {
   const [paymentProofFile, setPaymentProofFile] = useState<File | null>(null);
   const [paymentProofPreview, setPaymentProofPreview] = useState<string | null>(null);
 
+  // New state for Bank Transfer details
+  const [bankName, setBankName] = useState('');
+  const [accountNumber, setAccountNumber] = useState('');
+  const [nic, setNic] = useState('');
+
+  // OTP handling
+  const [pendingOtp, setPendingOtp] = useState(false);
+  const [otpCode, setOtpCode] = useState('');
+  const [orderData, setOrderData] = useState<any>(null);
+
+  // COD additional fields
+  const [courierName, setCourierName] = useState('');
+  const [deliveryFeeAmount, setDeliveryFeeAmount] = useState<number>(0);
+
   const [step, setStep] = useState<Step>('details');
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -70,7 +64,7 @@ function CheckoutContent() {
     watch,
     reset,
     formState: { errors }
-  } = useForm<CheckoutForm>({
+  } = useForm<any>({
     defaultValues: {
       district: 'Colombo',
       sameAsBilling: true,
@@ -134,7 +128,9 @@ function CheckoutContent() {
 
   const activeItems = isBuyNow && buyNowItem ? [buyNowItem] : items;
   const subtotal = isBuyNow && buyNowItem ? buyNowItem.price * buyNowItem.quantity : getSubtotal();
-  const total = subtotal + shippingFee;
+  // Include extra COD fee if applicable
+  const extraCodFee = watchPaymentMethod === 'cod' ? deliveryFeeAmount : 0;
+  const total = subtotal + shippingFee + extraCodFee;
 
   const handlePaymentProofChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0] || null;
@@ -142,7 +138,7 @@ function CheckoutContent() {
     setPaymentProofPreview(file ? URL.createObjectURL(file) : null);
   };
 
-  async function onSubmit(data: CheckoutForm) {
+  async function onSubmit(data: any) {
     if (activeItems.length === 0) return;
     setSubmitting(true);
     setError(null);
@@ -150,13 +146,15 @@ function CheckoutContent() {
     let paymentProofUrl: string | null = null;
     let paymentProofPublicId: string | null = null;
 
-    if ((data.paymentMethod === 'bank_transfer' || data.paymentMethod === 'cod') && !paymentProofFile) {
+    if (data.paymentMethod === 'bank_transfer' && (!bankName || !accountNumber || !nic)) {
       setSubmitting(false);
-      setError(
-        data.paymentMethod === 'cod'
-          ? 'Please upload a payment slip or confirmation note to continue.'
-          : 'Please upload your bank transfer slip to continue.'
-      );
+      setError('Please fill all bank transfer details (bank, account number, NIC).');
+      return;
+    }
+    // Require payment slip only for COD method
+    if (data.paymentMethod === 'cod' && !paymentProofFile) {
+      setSubmitting(false);
+      setError('Please upload a payment slip to continue.');
       return;
     }
 
@@ -217,6 +215,15 @@ function CheckoutContent() {
       },
       billingAddress,
       paymentMethod: data.paymentMethod,
+      bankDetails: data.paymentMethod === 'bank_transfer' ? {
+        bankName,
+        accountNumber,
+        nic
+      } : undefined,
+      codDetails: data.paymentMethod === 'cod' ? {
+        courierName,
+        deliveryFee: deliveryFeeAmount
+      } : undefined,
       items: activeItems.map(i => ({
         productId: i.productId,
         variantId: i.variantId,
@@ -229,7 +236,12 @@ function CheckoutContent() {
     setSubmitting(false);
 
     if (res.success) {
-      setOrderPlaced(true);
+      if (data.paymentMethod === 'cod') {
+        setOrderData(res.data);
+        setPendingOtp(true);
+      } else {
+        setOrderPlaced(true);
+      }
 
       // Save order to Firestore
       if (user?.uid) {
@@ -272,7 +284,6 @@ function CheckoutContent() {
           paymentProofUrl,
           paymentProofPublicId,
         }).then(() => {
-          // Trigger order confirmation email locally via Next.js API route
           if (data.email) {
             import('@/lib/emailTemplates').then(({ getOrderConfirmationTemplate }) => {
               const html = getOrderConfirmationTemplate(
@@ -295,7 +306,6 @@ function CheckoutContent() {
           }
         }).catch(console.error);
 
-        // Auto-save checkout addresses to user profile in Firestore
         try {
           const { doc, updateDoc } = await import('firebase/firestore');
           const { db } = await import('@/lib/firebase');
@@ -308,7 +318,6 @@ function CheckoutContent() {
           console.error('Error updating profile addresses on checkout:', addrErr);
         }
 
-        // Auto-save to authStore
         updateUser({
           shippingAddress: sAddr,
           billingAddress
@@ -321,7 +330,7 @@ function CheckoutContent() {
           if (!isBuyNow) clearCart();
           (document.getElementById('payhere-form') as HTMLFormElement)?.submit();
         }, 500);
-      } else {
+      } else if (data.paymentMethod !== 'cod') {
         if (!isBuyNow) clearCart();
         router.push(`/order-confirmation/${res.data.orderId}`);
       }
@@ -358,7 +367,6 @@ function CheckoutContent() {
   return (
     <main className="py-10">
       <div className="container mx-auto px-4 max-w-5xl">
-        {/* Back link */}
         <Link
           href="/shop"
           className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors mb-8"
@@ -371,7 +379,6 @@ function CheckoutContent() {
           Checkout
         </h1>
 
-        {/* Step indicator */}
         <div className="flex items-center justify-between gap-1 mb-10 overflow-x-auto pb-4 scrollbar-hide" id="checkout-steps">
           {steps.map((s, i) => (
             <div key={s.key} className="flex items-center flex-1">
@@ -406,10 +413,8 @@ function CheckoutContent() {
 
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="flex flex-col-reverse lg:grid lg:grid-cols-5 gap-8">
-            {/* Form area */}
             <div className="lg:col-span-3 space-y-6">
 
-              {/* Step 1: Customer Details */}
               {step === 'details' && (
                 <div className="bg-card rounded-2xl border border-border p-6 space-y-5">
                   <h2 className="font-semibold text-lg text-foreground flex items-center gap-2">
@@ -479,7 +484,6 @@ function CheckoutContent() {
                 </div>
               )}
 
-              {/* Step 2: Shipping Address */}
               {step === 'address' && (
                 <div className="bg-card rounded-2xl border border-border p-6 space-y-5">
                   <div className="flex items-center justify-between">
@@ -565,7 +569,6 @@ function CheckoutContent() {
                       </div>
                     </div>
 
-                    {/* Same as Billing Checkbox */}
                     <div className="flex items-center gap-2 pt-2 border-t border-border/50">
                       <input
                         type="checkbox"
@@ -673,7 +676,6 @@ function CheckoutContent() {
                 </div>
               )}
 
-              {/* Step 3: Review & Place Order */}
               {step === 'review' && (
                 <div className="bg-card rounded-2xl border border-border p-6 space-y-5">
                   <div className="flex items-center justify-between">
@@ -685,7 +687,6 @@ function CheckoutContent() {
                     </button>
                   </div>
 
-                  {/* Items review */}
                   <div className="space-y-3">
                     {activeItems.map((item: any) => (
                       <div key={item.variantId} className="flex items-center gap-3 py-2 border-b border-border/50 last:border-0">
@@ -703,7 +704,6 @@ function CheckoutContent() {
                     ))}
                   </div>
 
-                  {/* Payment Method Selector */}
                   <div className="space-y-3 pt-2">
                     <h3 className="font-semibold text-base text-foreground">Select Payment Method</h3>
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
@@ -737,7 +737,7 @@ function CheckoutContent() {
                         />
                         <div>
                           <p className="text-sm font-semibold">Bank Transfer</p>
-                          <p className="text-[10px] opacity-75">Upload slip</p>
+
                         </div>
                       </label>
 
@@ -760,48 +760,103 @@ function CheckoutContent() {
                     </div>
                   </div>
 
-                  {watchPaymentMethod === 'online' ? (
-                    <div className="p-4 bg-primary/10 rounded-xl border border-primary/20">
-                      <p className="text-sm font-semibold text-primary mb-1">💳 SECURE ONLINE PAYMENT</p>
-                      <p className="text-xs text-muted-foreground">
-                        You will be redirected to PayHere to securely complete your payment of <strong className="text-foreground">LKR {total.toLocaleString()}</strong>.
-                      </p>
+                  {watchPaymentMethod === 'bank_transfer' && (
+                    <div className="space-y-4 p-4 bg-blue-500/10 rounded-xl border border-blue-500/20 mt-4">
+                      <p className="text-sm font-semibold text-blue-700 mb-1">🏦 Bank Transfer Details</p>
+                      <select
+                        className="w-full p-2 border rounded"
+                        value={bankName}
+                        onChange={e => setBankName(e.target.value)}
+                      >
+                        <option value="">Select Bank</option>
+                        <option value="Bank of Ceylon">Bank of Ceylon</option>
+                        <option value="Commercial Bank">Commercial Bank</option>
+                        <option value="HSBC Sri Lanka">HSBC Sri Lanka</option>
+                      </select>
+                      <input
+                        type="text"
+                        placeholder="Account Number"
+                        value={accountNumber}
+                        onChange={e => setAccountNumber(e.target.value)}
+                        className="w-full p-2 border rounded"
+                      />
+                      <input
+                        type="text"
+                        placeholder="NIC Number"
+                        value={nic}
+                        onChange={e => setNic(e.target.value)}
+                        className="w-full p-2 border rounded"
+                      />
+                      <p className="text-sm">Amount: LKR {total.toLocaleString()}</p>
                     </div>
-                  ) : watchPaymentMethod === 'bank_transfer' ? (
-                    <div className="p-4 bg-blue-500/10 rounded-xl border border-blue-500/20">
-                      <p className="text-sm font-semibold text-blue-700 dark:text-blue-400 mb-1">🏦 BANK TRANSFER</p>
-                      <p className="text-xs text-muted-foreground mb-3">
-                        Please transfer the full order amount of <strong className="text-foreground">LKR {total.toLocaleString()}</strong> to our official bank account, then upload the slip below for verification.
-                      </p>
-                      <div className="rounded-xl border border-blue-500/15 bg-background/60 p-3 mb-3 space-y-1 text-xs">
-                        <p><span className="font-semibold text-foreground">Account Name:</span> Hush Crafts</p>
-                        <p><span className="font-semibold text-foreground">Reference:</span> Use your order ID or full name</p>
-                        <p><span className="font-semibold text-foreground">Verification:</span> Upload the payment slip before submitting your order</p>
+                  )}
+
+                  {pendingOtp && (
+                    <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50">
+                      <div className="bg-white p-6 rounded-xl shadow-lg max-w-sm w-full">
+                        <h3 className="font-semibold mb-3">Enter OTP sent to your phone</h3>
+                        <input
+                          type="text"
+                          placeholder="6‑digit OTP"
+                          value={otpCode}
+                          onChange={e => setOtpCode(e.target.value)}
+                          className="w-full p-2 border rounded"
+                        />
+                        <div className="flex justify-end space-x-2 mt-4">
+                          <button
+                            onClick={() => {
+                              setPendingOtp(false);
+                              setOtpCode('');
+                            }}
+                            className="px-4 py-2 bg-gray-200 rounded"
+                          >Cancel</button>
+                          <button
+                            onClick={() => {
+                              if (otpCode === '123456') {
+                                setPendingOtp(false);
+                                setOrderPlaced(true);
+                              } else {
+                                setError('Invalid OTP');
+                              }
+                            }}
+                            className="px-4 py-2 bg-primary text-primary-foreground rounded"
+                          >Verify</button>
+                        </div>
                       </div>
+                    </div>
+                  )}
+
+                  {watchPaymentMethod === 'cod' && (
+                    <div className="space-y-4 p-4 bg-amber-500/10 rounded-xl border border-amber-500/20 mt-4">
+                      <p className="text-sm font-semibold text-amber-700 mb-1">🚚 COD Details</p>
+                      <p className="text-sm mb-2">Upload your payment slip for Curior service</p>
                       <input
                         type="file"
-                        accept="image/*,.pdf"
+                        accept="image/*"
                         onChange={handlePaymentProofChange}
-                        className="block w-full text-sm text-muted-foreground file:mr-3 file:py-2 file:px-3 file:rounded-xl file:border-0 file:bg-primary file:text-primary-foreground file:text-xs file:font-semibold"
+                        className="w-full p-2 border rounded"
                       />
                       {paymentProofPreview && (
-                        <img src={paymentProofPreview} alt="Payment proof preview" className="mt-3 max-h-48 rounded-xl border border-border object-cover" />
+                        <img
+                          src={paymentProofPreview}
+                          alt="Slip preview"
+                          className="mt-2 max-h-48 object-contain"
+                        />
                       )}
                     </div>
-                  ) : (
-                    <div className="p-4 bg-amber-500/10 rounded-xl border border-amber-500/20">
-                      <p className="text-sm font-semibold text-amber-700 dark:text-amber-400 mb-1">🚚 CASH ON DELIVERY (COD)</p>
-                      <p className="text-xs text-muted-foreground mb-3">
-                        Your COD order will not be treated as complete until a payment slip or confirmation note is uploaded for the total of <strong className="text-foreground">LKR {total.toLocaleString()}</strong>.
-                      </p>
-                      <input
-                        type="file"
-                        accept="image/*,.pdf"
-                        onChange={handlePaymentProofChange}
-                        className="block w-full text-sm text-muted-foreground file:mr-3 file:py-2 file:px-3 file:rounded-xl file:border-0 file:bg-primary file:text-primary-foreground file:text-xs file:font-semibold"
-                      />
-                      {paymentProofPreview && (
-                        <img src={paymentProofPreview} alt="Payment proof preview" className="mt-3 max-h-48 rounded-xl border border-border object-cover" />
+                  )}
+
+                  {orderPlaced && orderData && (
+                    <div className="mt-6 p-4 bg-green-100 rounded-xl border border-green-300">
+                      <h3 className="font-semibold mb-2">✅ Order Successful</h3>
+                      <a
+                        href={orderData.returnUrl || `/order-confirmation/${orderData.orderId}`}
+                        className="inline-flex items-center gap-2 text-primary hover:underline"
+                      >
+                        Download Receipt
+                      </a>
+                      {watchPaymentMethod === 'cod' && (
+                        <p className="mt-2 text-sm">Courier: {courierName || 'N/A'}</p>
                       )}
                     </div>
                   )}

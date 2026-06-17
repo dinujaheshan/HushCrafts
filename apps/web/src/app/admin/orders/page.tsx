@@ -28,7 +28,7 @@ export default function AdminOrdersPage() {
   const [selectedOrder, setSelectedOrder] = useState<any | null>(null);
 
   const admin = useAdminAuthStore(s => s.admin);
-  const canWrite = admin?.role === 'super_admin' || admin?.permissions.manageOrders;
+  const canWrite = admin?.role === 'super_admin' || (admin?.permissions?.orderUpdate ?? admin?.permissions?.manageOrders);
   
   // Custom tracking inputs
   const [carrier, setCarrier] = useState('');

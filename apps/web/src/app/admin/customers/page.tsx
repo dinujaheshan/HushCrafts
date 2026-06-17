@@ -13,7 +13,8 @@ export default function AdminCustomersPage() {
 
   // Permission Guard
   const admin = useAdminAuthStore(s => s.admin);
-  const canWrite = admin?.role === 'super_admin' || admin?.permissions.manageCustomers;
+  const canUpdate = admin?.role === 'super_admin' || (admin?.permissions?.customerUpdate ?? admin?.permissions?.manageCustomers);
+  const canDelete = admin?.role === 'super_admin' || (admin?.permissions?.customerDelete ?? admin?.permissions?.manageCustomers);
 
   // Modal State
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -96,7 +97,7 @@ export default function AdminCustomersPage() {
   }, []);
 
   const openAddModal = () => {
-    if (!canWrite) return;
+    if (!canUpdate) return;
     setEditingCustomer(null);
     setFormFirstName('');
     setFormLastName('');
@@ -107,7 +108,7 @@ export default function AdminCustomersPage() {
   };
 
   const openEditModal = (c: any) => {
-    if (!canWrite) return;
+    if (!canUpdate) return;
     setEditingCustomer(c);
     setFormFirstName(c.firstName);
     setFormLastName(c.lastName);
@@ -119,7 +120,7 @@ export default function AdminCustomersPage() {
 
   const handleSaveCustomer = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!canWrite) return;
+    if (!canUpdate) return;
 
     if (formMobile.length !== 10 || isNaN(Number(formMobile))) {
       alert('Please enter a valid 10-digit mobile number.');
@@ -156,7 +157,7 @@ export default function AdminCustomersPage() {
   };
 
   const handleDeleteCustomer = async (c: any) => {
-    if (!canWrite) return;
+    if (!canDelete) return;
     if (!confirm(`Are you sure you want to permanently delete customer "${c.fullName}"? This will delete their database profile.`)) return;
 
     try {
@@ -185,7 +186,7 @@ export default function AdminCustomersPage() {
           <h1 className="text-3xl font-bold tracking-tight text-foreground font-serif">Customer Database</h1>
           <p className="text-sm text-muted-foreground mt-1">Review users, orders, and manage client profiles.</p>
         </div>
-        {canWrite && (
+        {canUpdate && (
           <button
             onClick={openAddModal}
             className="flex items-center gap-2 px-5 py-3 bg-primary text-primary-foreground rounded-2xl text-xs font-bold uppercase tracking-wider hover:bg-primary/95 transition-all shadow-md shadow-primary/10 active:scale-95 cursor-pointer self-start sm:self-auto"
@@ -277,24 +278,25 @@ export default function AdminCustomersPage() {
                       <td className="px-6 py-3.5 text-xs text-muted-foreground font-semibold">{customer.lastOrderDate}</td>
                       <td className="px-6 py-3.5">
                         <div className="flex items-center gap-1.5">
-                          {canWrite ? (
-                            <>
-                              <button
-                                onClick={() => openEditModal(customer)}
-                                className="w-8 h-8 flex items-center justify-center rounded-xl border border-border bg-card hover:bg-secondary transition-colors text-muted-foreground hover:text-primary cursor-pointer"
-                                title="Edit Customer"
-                              >
-                                <Edit size={14} />
-                              </button>
-                              <button
-                                onClick={() => handleDeleteCustomer(customer)}
-                                className="w-8 h-8 flex items-center justify-center rounded-xl border border-border bg-card hover:bg-secondary transition-colors text-muted-foreground hover:text-red-500 cursor-pointer"
-                                title="Delete Customer"
-                              >
-                                <Trash2 size={14} />
-                              </button>
-                            </>
-                          ) : (
+                          {canUpdate && (
+                            <button
+                              onClick={() => openEditModal(customer)}
+                              className="w-8 h-8 flex items-center justify-center rounded-xl border border-border bg-card hover:bg-secondary transition-colors text-muted-foreground hover:text-primary cursor-pointer"
+                              title="Edit Customer"
+                            >
+                              <Edit size={14} />
+                            </button>
+                          )}
+                          {canDelete && (
+                            <button
+                              onClick={() => handleDeleteCustomer(customer)}
+                              className="w-8 h-8 flex items-center justify-center rounded-xl border border-border bg-card hover:bg-secondary transition-colors text-muted-foreground hover:text-red-500 cursor-pointer"
+                              title="Delete Customer"
+                            >
+                              <Trash2 size={14} />
+                            </button>
+                          )}
+                          {!canUpdate && !canDelete && (
                             <span className="text-[10px] font-bold text-slate-400 uppercase">Read Only</span>
                           )}
                         </div>

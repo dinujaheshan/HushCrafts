@@ -62,15 +62,13 @@ export default function ProductCard({ product }: ProductCardProps) {
         {/* Image container */}
         <div className="relative aspect-[4/5] overflow-hidden bg-muted/30">
           {image ? (
-            <>
-              <Image
-                src={hovered && secondImage !== image ? secondImage : image}
-                alt={product.name}
-                fill
-                className="object-cover transition-all duration-500 group-hover:scale-105"
-                sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-              />
-            </>
+            <Image
+              src={hovered && secondImage !== image ? secondImage : image}
+              alt={product.name}
+              fill
+              className="object-cover transition-all duration-500 group-hover:scale-105"
+              sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+            />
           ) : (
             <div className="absolute inset-0 flex items-center justify-center">
               <ShoppingBag size={40} className="text-muted-foreground/30" />
@@ -155,12 +153,12 @@ export default function ProductCard({ product }: ProductCardProps) {
                   />
                 ))}
               </div>
-              <span className="text-[10px] font-bold text-muted-foreground">({product.reviewCount})</span>
+              <span className="text-sm font-bold text-primary">({product.reviewCount})</span>
             </div>
           )}
 
           <div className="flex items-center justify-between mt-2">
-            <span className="text-sm font-bold text-primary" style={{ fontFamily: 'var(--font-sans)' }}>
+            <span className="text-lg font-extrabold text-primary" style={{ fontFamily: 'var(--font-sans)' }}>
               LKR {displayPrice.toLocaleString()}
             </span>
             <button

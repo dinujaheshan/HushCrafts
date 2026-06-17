@@ -64,7 +64,13 @@ export default function AdminCategoriesPage() {
 
   // Permission check
   const canManage =
-    admin?.role === 'super_admin' || admin?.permissions?.manageProducts;
+    admin?.role === 'super_admin' || (admin?.permissions?.manageCategories ?? admin?.permissions?.manageProducts);
+  const canCreate =
+    admin?.role === 'super_admin' || (admin?.permissions?.categoryCreate ?? admin?.permissions?.manageProducts);
+  const canUpdate =
+    admin?.role === 'super_admin' || (admin?.permissions?.categoryUpdate ?? admin?.permissions?.manageProducts);
+  const canDelete =
+    admin?.role === 'super_admin' || (admin?.permissions?.categoryDelete ?? admin?.permissions?.manageProducts);
 
   const fetchCategories = async () => {
     setLoading(true);
@@ -228,13 +234,15 @@ export default function AdminCategoriesPage() {
             Manage product categories displayed on the shop and home page.
           </p>
         </div>
-        <button
-          onClick={openCreate}
-          className="flex items-center gap-2 px-5 py-2.5 bg-primary text-primary-foreground rounded-xl text-xs font-bold uppercase tracking-wider hover:bg-primary/90 transition-all shadow-md shadow-primary/10 cursor-pointer"
-        >
-          <Plus size={14} />
-          New Category
-        </button>
+        {canCreate && (
+          <button
+            onClick={openCreate}
+            className="flex items-center gap-2 px-5 py-2.5 bg-primary text-primary-foreground rounded-xl text-xs font-bold uppercase tracking-wider hover:bg-primary/90 transition-all shadow-md shadow-primary/10 cursor-pointer"
+          >
+            <Plus size={14} />
+            New Category
+          </button>
+        )}
       </div>
 
       {/* Global feedback */}
@@ -424,12 +432,14 @@ export default function AdminCategoriesPage() {
               <p className="font-semibold text-sm text-foreground">No categories yet</p>
               <p className="text-xs mt-1">Create your first category to organize products.</p>
             </div>
-            <button
-              onClick={openCreate}
-              className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-xl text-xs font-bold uppercase tracking-wider hover:bg-primary/90 transition-all cursor-pointer"
-            >
-              <Plus size={12} /> Create Category
-            </button>
+            {canCreate && (
+              <button
+                onClick={openCreate}
+                className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-xl text-xs font-bold uppercase tracking-wider hover:bg-primary/90 transition-all cursor-pointer"
+              >
+                <Plus size={12} /> Create Category
+              </button>
+            )}
           </div>
         ) : (
           <div className="overflow-x-auto">
@@ -496,26 +506,30 @@ export default function AdminCategoriesPage() {
                     {/* Actions */}
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-2 justify-end">
-                        <button
-                          onClick={() => openEdit(cat)}
-                          className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold border border-border text-muted-foreground hover:text-primary hover:border-primary rounded-xl transition-all cursor-pointer"
-                          aria-label={`Edit ${cat.name}`}
-                        >
-                          <Pencil size={12} /> Edit
-                        </button>
-                        <button
-                          onClick={() => handleDelete(cat)}
-                          disabled={deleting === cat.id}
-                          className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold border border-red-500/20 text-red-500 hover:bg-red-500/10 rounded-xl transition-all cursor-pointer disabled:opacity-50"
-                          aria-label={`Delete ${cat.name}`}
-                        >
-                          {deleting === cat.id ? (
-                            <Loader2 size={12} className="animate-spin" />
-                          ) : (
-                            <Trash2 size={12} />
-                          )}
-                          Delete
-                        </button>
+                        {canUpdate && (
+                          <button
+                            onClick={() => openEdit(cat)}
+                            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold border border-border text-muted-foreground hover:text-primary hover:border-primary rounded-xl transition-all cursor-pointer"
+                            aria-label={`Edit ${cat.name}`}
+                          >
+                            <Pencil size={12} /> Edit
+                          </button>
+                        )}
+                        {canDelete && (
+                          <button
+                            onClick={() => handleDelete(cat)}
+                            disabled={deleting === cat.id}
+                            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold border border-red-500/20 text-red-500 hover:bg-red-500/10 rounded-xl transition-all cursor-pointer disabled:opacity-50"
+                            aria-label={`Delete ${cat.name}`}
+                          >
+                            {deleting === cat.id ? (
+                              <Loader2 size={12} className="animate-spin" />
+                            ) : (
+                              <Trash2 size={12} />
+                            )}
+                            Delete
+                          </button>
+                        )}
                       </div>
                     </td>
                   </tr>

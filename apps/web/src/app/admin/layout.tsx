@@ -58,12 +58,28 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 role: data.role || 'admin',
                 permissions: data.permissions || {
                   manageProducts: false,
+                  productCreate: false,
+                  productUpdate: false,
+                  productDelete: false,
+                  manageCategories: false,
+                  categoryCreate: false,
+                  categoryUpdate: false,
+                  categoryDelete: false,
                   manageInventory: false,
+                  inventoryUpdate: false,
                   manageOrders: false,
+                  orderUpdate: false,
+                  orderDelete: false,
                   manageCustomers: false,
+                  customerUpdate: false,
+                  customerDelete: false,
                   manageAnalytics: false,
                   manageFeedbacks: false,
+                  feedbackApprove: false,
+                  feedbackDelete: false,
                   manageMessages: false,
+                  messageReply: false,
+                  messageDelete: false,
                   manageAdmins: false,
                 },
                 isActive: true,
@@ -124,6 +140,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     if (href === '/admin') return true; // dashboard open to all admins
     if (href.startsWith('/admin/orders')) return permissions.manageOrders;
     if (href.startsWith('/admin/products')) return permissions.manageProducts;
+    if (href.startsWith('/admin/categories')) return permissions.manageCategories ?? permissions.manageProducts;
     if (href.startsWith('/admin/inventory')) return permissions.manageInventory;
     if (href.startsWith('/admin/customers')) return permissions.manageCustomers;
     if (href.startsWith('/admin/analytics')) return permissions.manageAnalytics;
@@ -137,6 +154,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     { href: '/admin', label: 'Dashboard', icon: <LayoutDashboard size={18} />, allowed: true },
     { href: '/admin/orders', label: 'Orders', icon: <ShoppingCart size={18} />, allowed: hasPermission('/admin/orders') },
     { href: '/admin/products', label: 'Products', icon: <Package size={18} />, allowed: hasPermission('/admin/products') },
+    { href: '/admin/categories', label: 'Categories', icon: <Package size={18} />, allowed: hasPermission('/admin/categories') },
     { href: '/admin/inventory', label: 'Inventory', icon: <Warehouse size={18} />, allowed: hasPermission('/admin/inventory') },
     { href: '/admin/customers', label: 'Customers', icon: <Users size={18} />, allowed: hasPermission('/admin/customers') },
     { href: '/admin/feedbacks', label: 'Feedbacks', icon: <MessageCircle size={18} />, allowed: hasPermission('/admin/feedbacks') },
@@ -205,7 +223,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                     : 'text-muted-foreground hover:text-foreground hover:bg-secondary/60'
                 }`}
               >
-                <span className={active ? 'text-primary-foreground' : 'text-muted-foreground group-hover:text-foreground'}>
+                <span className={active ? 'text-primary-foreground transition-transform duration-200 ease-out transform group-hover:translate-x-1 group-hover:scale-110' : 'text-muted-foreground group-hover:text-foreground transition-transform duration-200 ease-out transform group-hover:translate-x-1 group-hover:scale-110'}>
                   {item.icon}
                 </span>
                 <span className="flex-1 text-left">{item.label}</span>

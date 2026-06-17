@@ -3,10 +3,10 @@
 import { useState, useEffect } from 'react';
 import {
   Plus, Search, Edit, Trash2, Archive, Loader2,
-  Package, ChevronDown, Check, Camera
+  Package, ChevronDown, Check, Camera, X
 } from '@/components/MaterialIcons';
 import { db } from '@/lib/firebase';
-import { collection, doc, getDocs, setDoc, deleteDoc, updateDoc } from 'firebase/firestore';
+import { collection, doc, getDocs, setDoc, deleteDoc, updateDoc, addDoc } from 'firebase/firestore';
 import { useAdminAuthStore } from '@/store/adminAuthStore';
 import Image from 'next/image';
 
@@ -15,6 +15,14 @@ const STATUS_STYLES: Record<string, string> = {
   draft: 'bg-amber-500/10 text-amber-600 dark:text-amber-400 dark:bg-amber-500/20 border border-amber-500/20',
   archived: 'bg-slate-500/10 text-slate-600 dark:text-slate-400 dark:bg-slate-500/20 border border-slate-500/20'
 };
+
+const slugify = (text: string) =>
+  text
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9\s-]/g, '')
+    .replace(/[\s_-]+/g, '-')
+    .replace(/^-+|-+$/g, '');
 
 export default function AdminProductsPage() {
   const [products, setProducts] = useState<any[]>([]);
@@ -25,12 +33,19 @@ export default function AdminProductsPage() {
 
   // Permission Guard
   const admin = useAdminAuthStore(s => s.admin);
-  const canWrite = admin?.role === 'super_admin' || admin?.permissions.manageProducts;
+  const canManage = admin?.role === 'super_admin' || admin?.permissions?.manageProducts;
+  const canCreate = admin?.role === 'super_admin' || (admin?.permissions?.productCreate ?? admin?.permissions?.manageProducts);
+  const canUpdate = admin?.role === 'super_admin' || (admin?.permissions?.productUpdate ?? admin?.permissions?.manageProducts);
+  const canDelete = admin?.role === 'super_admin' || (admin?.permissions?.productDelete ?? admin?.permissions?.manageProducts);
 
   // Modal State
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState<any | null>(null);
   const [uploadingImage, setUploadingImage] = useState(false);
+  const [isCreatingCategory, setIsCreatingCategory] = useState(false);
+  const [newCategoryName, setNewCategoryName] = useState('');
+  const [newCategorySlug, setNewCategorySlug] = useState('');
 
   // Form Fields State
   const [formName, setFormName] = useState('');
@@ -81,7 +96,7 @@ export default function AdminProductsPage() {
   }, []);
 
   const openAddModal = () => {
-    if (!canWrite) return;
+    if (!canCreate) return;
     setEditingProduct(null);
     setFormName('');
     setFormSummary('');
@@ -102,7 +117,7 @@ export default function AdminProductsPage() {
   };
 
   const openEditModal = (p: any) => {
-    if (!canWrite) return;
+    if (!canUpdate) return;
     setEditingProduct(p);
     setFormName(p.name);
     setFormSummary(p.summary || '');
@@ -178,9 +193,59 @@ export default function AdminProductsPage() {
     });
   };
 
+  const handleCreateCategory = async () => {
+    const trimmedName = newCategoryName.trim();
+    const slug = slugify(newCategorySlug || newCategoryName);
+
+    if (!trimmedName) {
+      alert('Please enter a category name.');
+      return;
+    }
+
+    if (!slug) {
+      alert('Please enter a valid category name.');
+      return;
+    }
+
+    setIsCreatingCategory(true);
+    try {
+      const docRef = await addDoc(collection(db, 'categories'), {
+        name: trimmedName,
+        slug,
+        description: '',
+        image: '',
+        productCount: 0,
+        createdAt: new Date().toISOString(),
+      });
+
+      const createdCategory = {
+        id: docRef.id,
+        name: trimmedName,
+        slug,
+        description: '',
+        image: '',
+        productCount: 0,
+      };
+
+      setCategories(prev =>
+        [...prev, createdCategory].sort((a, b) => a.name.localeCompare(b.name))
+      );
+      setFormCategory(docRef.id);
+      setIsCategoryModalOpen(false);
+      setNewCategoryName('');
+      setNewCategorySlug('');
+      alert(`Category "${trimmedName}" created successfully.`);
+    } catch (err) {
+      console.error('Failed to create category:', err);
+      alert('Failed to create category.');
+    } finally {
+      setIsCreatingCategory(false);
+    }
+  };
+
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!canWrite) return;
+    if (editingProduct ? !canUpdate : !canCreate) return;
 
     const price = Number(formPrice);
     if (isNaN(price) || price <= 0) {
@@ -248,7 +313,7 @@ export default function AdminProductsPage() {
   };
 
   const handleArchive = async (p: any) => {
-    if (!canWrite) return;
+    if (!canUpdate) return;
     const confirmMsg = p.status === 'archived' ? 'Restore product from archive?' : 'Archive this product?';
     if (!confirm(confirmMsg)) return;
 
@@ -264,7 +329,7 @@ export default function AdminProductsPage() {
   };
 
   const handleDelete = async (p: any) => {
-    if (!canWrite) return;
+    if (!canDelete) return;
     if (!confirm(`Are you absolutely sure you want to delete "${p.name}" permanently from the database? This cannot be undone.`)) return;
 
     try {
@@ -290,7 +355,7 @@ export default function AdminProductsPage() {
           <h1 className="text-3xl font-bold tracking-tight text-foreground font-serif">Product Catalog</h1>
           <p className="text-sm text-muted-foreground mt-1">Add, edit, archive, and manage Hush Craft slippers.</p>
         </div>
-        {canWrite && (
+        {canCreate && (
           <button
             onClick={openAddModal}
             className="flex items-center gap-2 px-5 py-3 bg-primary text-primary-foreground rounded-2xl text-xs font-bold uppercase tracking-wider hover:bg-primary/95 transition-all shadow-md shadow-primary/10 active:scale-95 cursor-pointer self-start sm:self-auto"
@@ -325,6 +390,60 @@ export default function AdminProductsPage() {
           <ChevronDown size={13} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none" />
         </div>
       </div>
+
+      {isCategoryModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+          <div className="w-full max-w-md rounded-2xl border border-border bg-card shadow-2xl">
+            <div className="flex items-center justify-between border-b border-border px-5 py-4">
+              <h3 className="font-semibold text-foreground">Add New Category</h3>
+              <button
+                type="button"
+                onClick={() => setIsCategoryModalOpen(false)}
+                className="rounded-xl p-1.5 text-muted-foreground hover:bg-secondary hover:text-foreground"
+              >
+                <X size={16} />
+              </button>
+            </div>
+            <div className="space-y-4 p-5">
+              <div>
+                <label className="mb-1.5 block text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Category Name</label>
+                <input
+                  value={newCategoryName}
+                  onChange={e => setNewCategoryName(e.target.value)}
+                  placeholder="e.g. Bridal Slippers"
+                  className="w-full rounded-xl border border-border bg-background px-4 py-3 text-sm focus:border-primary focus:outline-none"
+                />
+              </div>
+              <div>
+                <label className="mb-1.5 block text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Slug (optional)</label>
+                <input
+                  value={newCategorySlug}
+                  onChange={e => setNewCategorySlug(e.target.value)}
+                  placeholder="bridal-slippers"
+                  className="w-full rounded-xl border border-border bg-background px-4 py-3 text-sm focus:border-primary focus:outline-none"
+                />
+              </div>
+            </div>
+            <div className="flex gap-3 border-t border-border px-5 py-4">
+              <button
+                type="button"
+                onClick={() => setIsCategoryModalOpen(false)}
+                className="flex-1 rounded-xl border border-border px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-muted-foreground hover:bg-secondary"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={handleCreateCategory}
+                disabled={isCreatingCategory}
+                className="flex-1 rounded-xl bg-primary px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-primary-foreground hover:bg-primary/90 disabled:opacity-60"
+              >
+                {isCreatingCategory ? 'Saving...' : 'Save Category'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Products Table */}
       {loading ? (
@@ -400,7 +519,7 @@ export default function AdminProductsPage() {
                     </td>
                     <td className="px-6 py-3.5">
                       <div className="flex items-center justify-end gap-1.5">
-                        {canWrite ? (
+                        {canUpdate && (
                           <>
                             <button
                               onClick={() => openEditModal(product)}
@@ -416,15 +535,18 @@ export default function AdminProductsPage() {
                             >
                               <Archive size={14} />
                             </button>
-                            <button
-                              onClick={() => handleDelete(product)}
-                              className="w-8 h-8 flex items-center justify-center rounded-xl border border-border bg-card hover:bg-secondary transition-colors text-muted-foreground hover:text-red-500 cursor-pointer"
-                              title="Delete product"
-                            >
-                              <Trash2 size={14} />
-                            </button>
                           </>
-                        ) : (
+                        )}
+                        {canDelete && (
+                          <button
+                            onClick={() => handleDelete(product)}
+                            className="w-8 h-8 flex items-center justify-center rounded-xl border border-border bg-card hover:bg-secondary transition-colors text-muted-foreground hover:text-red-500 cursor-pointer"
+                            title="Delete product"
+                          >
+                            <Trash2 size={14} />
+                          </button>
+                        )}
+                        {!canUpdate && !canDelete && (
                           <span className="text-[10px] font-bold text-slate-400 uppercase">Read Only</span>
                         )}
                       </div>
@@ -527,6 +649,13 @@ export default function AdminProductsPage() {
                     </select>
                     <ChevronDown size={14} className="absolute right-3.5 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none" />
                   </div>
+                  <button
+                    type="button"
+                    onClick={() => setIsCategoryModalOpen(true)}
+                    className="mt-2 text-xs font-semibold text-primary hover:text-primary/80 transition-colors"
+                  >
+                    + Add New Category
+                  </button>
                 </div>
 
                 {/* Status Selection */}
