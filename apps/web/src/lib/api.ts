@@ -430,3 +430,5 @@ export async function updateInventory(
     { method: 'PUT', body: JSON.stringify(payload) }
   );
 }
+
+// Triggering a fresh Vercel rebuild
