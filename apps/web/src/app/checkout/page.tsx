@@ -432,7 +432,7 @@ function CheckoutContent() {
                         placeholder="Amaya Perera"
                         className="w-full px-4 py-3 border border-border rounded-xl text-sm focus:outline-none focus:border-primary transition-colors bg-background"
                       />
-                      {errors.fullName && <p className="text-xs text-destructive mt-1">{errors.fullName.message}</p>}
+                      {errors.fullName && <p className="text-xs text-destructive mt-1">{errors.fullName.message as string}</p>}
                     </div>
 
                     <div>
@@ -454,7 +454,7 @@ function CheckoutContent() {
                           className="w-full pl-9 pr-4 py-3 border border-border rounded-xl text-sm focus:outline-none focus:border-primary transition-colors bg-background"
                         />
                       </div>
-                      {errors.mobileNumber && <p className="text-xs text-destructive mt-1">{errors.mobileNumber.message}</p>}
+                      {errors.mobileNumber && <p className="text-xs text-destructive mt-1">{errors.mobileNumber.message as string}</p>}
                     </div>
 
                     <div>
@@ -509,7 +509,7 @@ function CheckoutContent() {
                           <option key={d} value={d}>{d}</option>
                         ))}
                       </select>
-                      {errors.district && <p className="text-xs text-destructive mt-1">{errors.district.message}</p>}
+                      {errors.district && <p className="text-xs text-destructive mt-1">{errors.district.message as string}</p>}
                     </div>
 
                     <div>
@@ -522,7 +522,7 @@ function CheckoutContent() {
                         placeholder="Colombo"
                         className="w-full px-4 py-3 border border-border rounded-xl text-sm focus:outline-none focus:border-primary transition-colors bg-background"
                       />
-                      {errors.city && <p className="text-xs text-destructive mt-1">{errors.city.message}</p>}
+                      {errors.city && <p className="text-xs text-destructive mt-1">{errors.city.message as string}</p>}
                     </div>
 
                     <div>
@@ -535,7 +535,7 @@ function CheckoutContent() {
                         placeholder="No. 45, Flower Road"
                         className="w-full px-4 py-3 border border-border rounded-xl text-sm focus:outline-none focus:border-primary transition-colors bg-background"
                       />
-                      {errors.addressLine1 && <p className="text-xs text-destructive mt-1">{errors.addressLine1.message}</p>}
+                      {errors.addressLine1 && <p className="text-xs text-destructive mt-1">{errors.addressLine1.message as string}</p>}
                     </div>
 
                     <div>
@@ -597,7 +597,7 @@ function CheckoutContent() {
                               <option key={d} value={d}>{d}</option>
                             ))}
                           </select>
-                          {errors.billingDistrict && <p className="text-xs text-destructive mt-1">{errors.billingDistrict.message}</p>}
+                          {errors.billingDistrict && <p className="text-xs text-destructive mt-1">{errors.billingDistrict.message as string}</p>}
                         </div>
 
                         <div>
@@ -610,7 +610,7 @@ function CheckoutContent() {
                             placeholder="Colombo"
                             className="w-full px-4 py-3 border border-border rounded-xl text-sm focus:outline-none focus:border-primary transition-colors bg-background"
                           />
-                          {errors.billingCity && <p className="text-xs text-destructive mt-1">{errors.billingCity.message}</p>}
+                          {errors.billingCity && <p className="text-xs text-destructive mt-1">{errors.billingCity.message as string}</p>}
                         </div>
 
                         <div>
@@ -623,7 +623,7 @@ function CheckoutContent() {
                             placeholder="No. 45, Flower Road"
                             className="w-full px-4 py-3 border border-border rounded-xl text-sm focus:outline-none focus:border-primary transition-colors bg-background"
                           />
-                          {errors.billingAddressLine1 && <p className="text-xs text-destructive mt-1">{errors.billingAddressLine1.message}</p>}
+                          {errors.billingAddressLine1 && <p className="text-xs text-destructive mt-1">{errors.billingAddressLine1.message as string}</p>}
                         </div>
 
                         <div>
