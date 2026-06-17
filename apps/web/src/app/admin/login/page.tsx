@@ -55,6 +55,7 @@ export default function AdminLoginPage() {
           manageAnalytics: true,
           manageFeedbacks: true,
           manageMessages: true,
+          manageAdmins: true,
         },
         createdAt: new Date().toISOString(),
       });
@@ -76,6 +77,7 @@ export default function AdminLoginPage() {
           manageAnalytics: false,
           manageFeedbacks: false,
           manageMessages: false,
+          manageAdmins: false,
         },
         createdAt: new Date().toISOString(),
       });
@@ -144,6 +146,9 @@ export default function AdminLoginPage() {
           manageOrders: false,
           manageCustomers: false,
           manageAnalytics: false,
+          manageFeedbacks: false,
+          manageMessages: false,
+          manageAdmins: false,
         },
         isActive: true,
         createdAt: adminData.createdAt,

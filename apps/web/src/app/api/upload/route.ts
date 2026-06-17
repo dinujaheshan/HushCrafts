@@ -17,9 +17,13 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Cloudinary not configured' }, { status: 500 });
     }
 
+    const requestedFolder = formData.get('folder');
+    const folder = typeof requestedFolder === 'string' && requestedFolder.trim()
+      ? requestedFolder.trim()
+      : 'hush-crafts/profile-pictures';
+
     // Build the signature for authenticated upload
     const timestamp = Math.floor(Date.now() / 1000);
-    const folder = 'hush-crafts/profile-pictures';
     
     // Generate signature
     const signString = `folder=${folder}&timestamp=${timestamp}${apiSecret}`;

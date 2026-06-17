@@ -9,6 +9,7 @@ export interface AdminPermissions {
   manageAnalytics: boolean;
   manageFeedbacks: boolean;
   manageMessages: boolean;
+  manageAdmins: boolean;
 }
 
 export interface AdminUser {

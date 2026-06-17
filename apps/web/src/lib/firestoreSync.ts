@@ -132,6 +132,8 @@ export interface Order {
   shippingFee: number;
   total: number;
   notes: string | null;
+  paymentProofUrl?: string | null;
+  paymentProofPublicId?: string | null;
   createdAt?: Timestamp | null;
 }
 

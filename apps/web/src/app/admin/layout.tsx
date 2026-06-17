@@ -64,6 +64,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                   manageAnalytics: false,
                   manageFeedbacks: false,
                   manageMessages: false,
+                  manageAdmins: false,
                 },
                 isActive: true,
                 createdAt: data.createdAt,
@@ -128,7 +129,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     if (href.startsWith('/admin/analytics')) return permissions.manageAnalytics;
     if (href.startsWith('/admin/feedbacks')) return permissions.manageFeedbacks;
     if (href.startsWith('/admin/messages')) return permissions.manageMessages;
-    if (href.startsWith('/admin/settings')) return false; // settings page strictly for super admin
+    if (href.startsWith('/admin/settings')) return permissions.manageAdmins;
     return false;
   };
 
@@ -141,7 +142,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     { href: '/admin/feedbacks', label: 'Feedbacks', icon: <MessageCircle size={18} />, allowed: hasPermission('/admin/feedbacks') },
     { href: '/admin/messages', label: 'Messages', icon: <Mail size={18} />, allowed: hasPermission('/admin/messages') },
     { href: '/admin/analytics', label: 'Analytics', icon: <BarChart3 size={18} />, allowed: hasPermission('/admin/analytics') },
-    { href: '/admin/settings', label: 'Settings', icon: <Settings size={18} />, allowed: admin.role === 'super_admin' },
+    { href: '/admin/settings', label: 'Settings', icon: <Settings size={18} />, allowed: hasPermission('/admin/settings') },
   ];
 
   const currentPathAllowed = hasPermission(pathname);

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { db, firebaseConfig } from '@/lib/firebase';
-import { collection, doc, getDocs, setDoc, updateDoc } from 'firebase/firestore';
+import { collection, deleteDoc, doc, getDocs, setDoc, updateDoc } from 'firebase/firestore';
 import { useAdminAuthStore } from '@/store/adminAuthStore';
 import {
   Users, Settings, ShieldAlert, Plus, Loader2,
@@ -30,7 +30,8 @@ export default function AdminSettingsPage() {
     manageCustomers: false,
     manageAnalytics: false,
     manageFeedbacks: false,
-    manageMessages: false
+    manageMessages: false,
+    manageAdmins: false
   });
 
   const [saving, setSaving] = useState(false);
@@ -89,11 +90,30 @@ export default function AdminSettingsPage() {
         permissions: updatedPermissions
       });
       
-      // Update local state instantly
       setAdmins(prev => prev.map(a => a.uid === adminId ? { ...a, permissions: updatedPermissions } : a));
     } catch (err) {
       console.error('Permission toggle failed:', err);
       alert('Failed to update permissions.');
+    }
+  };
+
+  const handleDeleteAdmin = async (adminId: string) => {
+    if (adminId === currentAdmin?.uid) {
+      alert('You cannot remove your own account.');
+      return;
+    }
+
+    const adminToDelete = admins.find(a => a.uid === adminId);
+    if (!adminToDelete) return;
+    if (!confirm(`Remove access for ${adminToDelete.name || adminToDelete.email}?`)) return;
+
+    try {
+      await deleteDoc(doc(db, 'admins', adminId));
+      setAdmins(prev => prev.filter(a => a.uid !== adminId));
+      setSuccess('Administrator access removed successfully.');
+    } catch (err) {
+      console.error('Delete admin failed:', err);
+      setError('Failed to remove administrator access.');
     }
   };
 
@@ -134,6 +154,7 @@ export default function AdminSettingsPage() {
           manageAnalytics: role === 'super_admin' ? true : permissions.manageAnalytics,
           manageFeedbacks: role === 'super_admin' ? true : permissions.manageFeedbacks,
           manageMessages: role === 'super_admin' ? true : permissions.manageMessages,
+          manageAdmins: role === 'super_admin' ? true : permissions.manageAdmins,
         },
         createdAt: new Date().toISOString()
       };
@@ -152,7 +173,8 @@ export default function AdminSettingsPage() {
         manageCustomers: false,
         manageAnalytics: false,
         manageFeedbacks: false,
-        manageMessages: false
+        manageMessages: false,
+        manageAdmins: false
       });
 
       await fetchAdmins();
@@ -221,7 +243,10 @@ export default function AdminSettingsPage() {
                         manageInventory: false,
                         manageOrders: false,
                         manageCustomers: false,
-                        manageAnalytics: false
+                        manageAnalytics: false,
+                        manageFeedbacks: false,
+                        manageMessages: false,
+                        manageAdmins: false
                       };
 
                       return (
@@ -254,6 +279,7 @@ export default function AdminSettingsPage() {
                                   { label: 'Feedbacks', key: 'manageFeedbacks' },
                                   { label: 'Messages', key: 'manageMessages' },
                                   { label: 'Analytics', key: 'manageAnalytics' },
+                                  { label: 'Admin Access', key: 'manageAdmins' },
                                 ].map(p => (
                                   <label key={p.key} className="flex items-center gap-1.5 text-xs text-slate-600 dark:text-slate-300 font-semibold cursor-pointer">
                                     <input
@@ -280,6 +306,13 @@ export default function AdminSettingsPage() {
                                 } disabled:opacity-50 disabled:cursor-not-allowed`}
                               >
                                 {a.isActive ? 'Active' : 'Inactive'}
+                              </button>
+                              <button
+                                onClick={() => handleDeleteAdmin(a.uid)}
+                                disabled={isSelf || isSuper}
+                                className="px-2.5 py-1.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all cursor-pointer bg-destructive/10 text-destructive border border-destructive/20 hover:bg-destructive/20 disabled:opacity-50 disabled:cursor-not-allowed"
+                              >
+                                Delete
                               </button>
                             </div>
                           </td>
@@ -390,7 +423,8 @@ export default function AdminSettingsPage() {
                       { label: 'View Customer Data', key: 'manageCustomers' },
                       { label: 'Moderate Feedbacks', key: 'manageFeedbacks' },
                       { label: 'Reply Support Messages', key: 'manageMessages' },
-                      { label: 'View Performance Analytics', key: 'manageAnalytics' }
+                      { label: 'View Performance Analytics', key: 'manageAnalytics' },
+                      { label: 'Manage Admin Access', key: 'manageAdmins' }
                     ].map(p => (
                       <label key={p.key} className="flex items-center gap-2 text-xs text-slate-600 dark:text-slate-300 font-bold cursor-pointer">
                         <input

@@ -55,6 +55,7 @@ export default function AccountPage() {
     itemCount: number;
     items?: any[];
     paymentMethod?: string;
+    paymentProofUrl?: string | null;
     trackingNumber?: string | null;
     carrier?: string | null;
     timeline?: Array<{ status: string; timestamp: any; note: string; updatedBy: string }>;
@@ -98,6 +99,7 @@ export default function AccountPage() {
                   ...o,
                   items: g.items || o.items || [],
                   paymentMethod: g.paymentMethod || o.paymentMethod || 'online',
+                  paymentProofUrl: g.paymentProofUrl || null,
                   status: g.orderStatus || o.status,
                   subtotal: g.subtotal || 0,
                   shippingFee: g.shippingFee || 0,
@@ -547,8 +549,22 @@ export default function AccountPage() {
                                 <div className="p-4 bg-muted/40 rounded-xl">
                                   <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-2">Payment Method</p>
                                   <p className="text-xs text-foreground">
-                                    💳 {order.paymentMethod === 'cod' ? 'Cash on Delivery (COD)' : 'PayHere Online'}
+                                    💳 {order.paymentMethod === 'cod'
+                                      ? 'Cash on Delivery (COD)'
+                                      : order.paymentMethod === 'bank_transfer'
+                                        ? 'Bank Transfer'
+                                        : 'PayHere Online'}
                                   </p>
+                                  {order.paymentProofUrl && (
+                                    <a
+                                      href={order.paymentProofUrl}
+                                      target="_blank"
+                                      rel="noreferrer"
+                                      className="mt-2 inline-flex items-center text-xs text-primary underline"
+                                    >
+                                      View payment proof
+                                    </a>
+                                  )}
                                 </div>
                               </div>
 

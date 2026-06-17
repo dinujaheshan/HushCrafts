@@ -33,7 +33,7 @@ interface CheckoutForm {
   billingCity?: string;
   billingDistrict?: string;
   billingPostalCode?: string;
-  paymentMethod: 'online' | 'cod';
+  paymentMethod: 'online' | 'bank_transfer' | 'cod';
 }
 
 const SHIPPING_FEES: Record<string, number> = {
@@ -56,6 +56,8 @@ function CheckoutContent() {
 
   const [buyNowItem, setBuyNowItem] = useState<any>(null);
   const [payhereData, setPayhereData] = useState<any>(null);
+  const [paymentProofFile, setPaymentProofFile] = useState<File | null>(null);
+  const [paymentProofPreview, setPaymentProofPreview] = useState<string | null>(null);
 
   const [step, setStep] = useState<Step>('details');
   const [submitting, setSubmitting] = useState(false);
@@ -134,10 +136,50 @@ function CheckoutContent() {
   const subtotal = isBuyNow && buyNowItem ? buyNowItem.price * buyNowItem.quantity : getSubtotal();
   const total = subtotal + shippingFee;
 
+  const handlePaymentProofChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0] || null;
+    setPaymentProofFile(file);
+    setPaymentProofPreview(file ? URL.createObjectURL(file) : null);
+  };
+
   async function onSubmit(data: CheckoutForm) {
     if (activeItems.length === 0) return;
     setSubmitting(true);
     setError(null);
+
+    let paymentProofUrl: string | null = null;
+    let paymentProofPublicId: string | null = null;
+
+    if (data.paymentMethod === 'bank_transfer' && !paymentProofFile) {
+      setSubmitting(false);
+      setError('Please upload your bank transfer slip to continue.');
+      return;
+    }
+
+    if (paymentProofFile && (data.paymentMethod === 'bank_transfer' || data.paymentMethod === 'cod')) {
+      try {
+        const uploadFormData = new FormData();
+        uploadFormData.append('file', paymentProofFile);
+        uploadFormData.append('folder', 'hush-crafts/order-proofs');
+
+        const uploadRes = await fetch('/api/upload', {
+          method: 'POST',
+          body: uploadFormData,
+        });
+
+        const uploadData = await uploadRes.json();
+        if (!uploadRes.ok || !uploadData.url) {
+          throw new Error(uploadData.error || 'Failed to upload payment proof.');
+        }
+
+        paymentProofUrl = uploadData.url;
+        paymentProofPublicId = uploadData.publicId || null;
+      } catch (uploadErr) {
+        setSubmitting(false);
+        setError(uploadErr instanceof Error ? uploadErr.message : 'Failed to upload payment proof.');
+        return;
+      }
+    }
 
     const billingAddress = data.sameAsBilling
       ? {
@@ -218,11 +260,13 @@ function CheckoutContent() {
           },
           shippingAddress: sAddr,
           billingAddress,
-          paymentMethod: data.paymentMethod === 'cod' ? 'cod' : 'PayHere',
+          paymentMethod: data.paymentMethod === 'online' ? 'PayHere' : data.paymentMethod === 'bank_transfer' ? 'bank_transfer' : 'cod',
           subtotal,
           shippingFee,
           total,
-          notes: data.notes || null
+          notes: data.notes || null,
+          paymentProofUrl,
+          paymentProofPublicId,
         }).then(() => {
           // Trigger order confirmation email locally via Next.js API route
           if (data.email) {
@@ -267,15 +311,15 @@ function CheckoutContent() {
         });
       }
 
-      if (data.paymentMethod === 'cod') {
-        if (!isBuyNow) clearCart();
-        router.push(`/order-confirmation/${res.data.orderId}`);
-      } else {
+      if (data.paymentMethod === 'online') {
         setPayhereData(res.data);
         setTimeout(() => {
           if (!isBuyNow) clearCart();
           (document.getElementById('payhere-form') as HTMLFormElement)?.submit();
         }, 500);
+      } else {
+        if (!isBuyNow) clearCart();
+        router.push(`/order-confirmation/${res.data.orderId}`);
       }
     } else {
       setSubmitting(false);
@@ -658,7 +702,7 @@ function CheckoutContent() {
                   {/* Payment Method Selector */}
                   <div className="space-y-3 pt-2">
                     <h3 className="font-semibold text-base text-foreground">Select Payment Method</h3>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                       <label className={`flex items-center gap-3 p-4 rounded-xl border cursor-pointer transition-all ${
                         watchPaymentMethod === 'online'
                           ? 'border-primary bg-primary/5 text-primary font-medium'
@@ -671,8 +715,25 @@ function CheckoutContent() {
                           className="w-4 h-4 text-primary focus:ring-primary border-border"
                         />
                         <div>
-                          <p className="text-sm font-semibold">Online Payment</p>
-                          <p className="text-[10px] opacity-75">Pay via PayHere Portal</p>
+                          <p className="text-sm font-semibold">Online</p>
+                          <p className="text-[10px] opacity-75">PayHere</p>
+                        </div>
+                      </label>
+
+                      <label className={`flex items-center gap-3 p-4 rounded-xl border cursor-pointer transition-all ${
+                        watchPaymentMethod === 'bank_transfer'
+                          ? 'border-primary bg-primary/5 text-primary font-medium'
+                          : 'border-border hover:border-primary/50 text-foreground/80'
+                      }`}>
+                        <input
+                          type="radio"
+                          value="bank_transfer"
+                          {...register('paymentMethod')}
+                          className="w-4 h-4 text-primary focus:ring-primary border-border"
+                        />
+                        <div>
+                          <p className="text-sm font-semibold">Bank Transfer</p>
+                          <p className="text-[10px] opacity-75">Upload slip</p>
                         </div>
                       </label>
 
@@ -688,8 +749,8 @@ function CheckoutContent() {
                           className="w-4 h-4 text-primary focus:ring-primary border-border"
                         />
                         <div>
-                          <p className="text-sm font-semibold">Cash on Delivery (COD)</p>
-                          <p className="text-[10px] opacity-75">Pay in cash on delivery</p>
+                          <p className="text-sm font-semibold">COD</p>
+                          <p className="text-[10px] opacity-75">Upload slip</p>
                         </div>
                       </label>
                     </div>
@@ -702,12 +763,37 @@ function CheckoutContent() {
                         You will be redirected to PayHere to securely complete your payment of <strong className="text-foreground">LKR {total.toLocaleString()}</strong>.
                       </p>
                     </div>
+                  ) : watchPaymentMethod === 'bank_transfer' ? (
+                    <div className="p-4 bg-blue-500/10 rounded-xl border border-blue-500/20">
+                      <p className="text-sm font-semibold text-blue-700 dark:text-blue-400 mb-1">🏦 BANK TRANSFER</p>
+                      <p className="text-xs text-muted-foreground mb-3">
+                        Please upload your bank transfer slip after sending the payment of <strong className="text-foreground">LKR {total.toLocaleString()}</strong>.
+                      </p>
+                      <input
+                        type="file"
+                        accept="image/*,.pdf"
+                        onChange={handlePaymentProofChange}
+                        className="block w-full text-sm text-muted-foreground file:mr-3 file:py-2 file:px-3 file:rounded-xl file:border-0 file:bg-primary file:text-primary-foreground file:text-xs file:font-semibold"
+                      />
+                      {paymentProofPreview && (
+                        <img src={paymentProofPreview} alt="Payment proof preview" className="mt-3 max-h-48 rounded-xl border border-border object-cover" />
+                      )}
+                    </div>
                   ) : (
                     <div className="p-4 bg-amber-500/10 rounded-xl border border-amber-500/20">
                       <p className="text-sm font-semibold text-amber-700 dark:text-amber-400 mb-1">🚚 CASH ON DELIVERY (COD)</p>
-                      <p className="text-xs text-muted-foreground">
-                        Order total of <strong className="text-foreground">LKR {total.toLocaleString()}</strong> will be paid in cash to our delivery partner.
+                      <p className="text-xs text-muted-foreground mb-3">
+                        Upload the payment slip or confirmation note for your COD order total of <strong className="text-foreground">LKR {total.toLocaleString()}</strong>.
                       </p>
+                      <input
+                        type="file"
+                        accept="image/*,.pdf"
+                        onChange={handlePaymentProofChange}
+                        className="block w-full text-sm text-muted-foreground file:mr-3 file:py-2 file:px-3 file:rounded-xl file:border-0 file:bg-primary file:text-primary-foreground file:text-xs file:font-semibold"
+                      />
+                      {paymentProofPreview && (
+                        <img src={paymentProofPreview} alt="Payment proof preview" className="mt-3 max-h-48 rounded-xl border border-border object-cover" />
+                      )}
                     </div>
                   )}
 
