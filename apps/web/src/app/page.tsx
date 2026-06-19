@@ -157,9 +157,8 @@ export default async function HomePage() {
                   {['A', 'D', 'S', 'M'].map((l, i) => (
                     <div
                       key={i}
-                      className={`w-8 h-8 rounded-full border-2 border-background flex items-center justify-center text-xs font-bold text-white ${
-                        ['bg-primary', 'bg-secondary', 'bg-accent', 'bg-destructive'][i]
-                      }`}
+                      className={`w-8 h-8 rounded-full border-2 border-background flex items-center justify-center text-xs font-bold text-white ${['bg-primary', 'bg-secondary', 'bg-accent', 'bg-destructive'][i]
+                        }`}
                     >
                       {l}
                     </div>
@@ -288,23 +287,23 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* ─── NEW ARRIVALS ──────────────────────────────────────────────────────── */}
-      <section id="new-arrivals" aria-label="New Arrival Slippers" className="py-20 bg-muted/20">
+      {/* ─── HOT ITEMS ────────────────────────────────────────────────────────── */}
+      <section id="hot-items" aria-label="Hot Item Slippers" className="py-20 bg-muted/20">
         <div className="container mx-auto px-4">
           <div className="flex items-end justify-between mb-10">
             <div>
               <p className="text-xs font-semibold text-primary uppercase tracking-widest mb-2">
-                Fresh In
+                Trending Now
               </p>
               <h2
                 className="font-serif text-3xl md:text-4xl font-semibold text-foreground"
                 style={{ fontFamily: 'var(--font-serif)' }}
               >
-                New Arrivals
+                Hot Items
               </h2>
             </div>
             <Link
-              href="/shop?sort=newest"
+              href="/shop?filter=featured"
               className="hidden md:flex items-center gap-2 text-sm font-medium text-primary hover:gap-3 transition-all"
             >
               View All <ArrowRight size={16} aria-hidden="true" />
@@ -337,56 +336,74 @@ export default async function HomePage() {
       <section
         id="promo-banner"
         aria-label="New Collection Promotional Banner"
-        className="relative overflow-hidden bg-gradient-to-r from-primary via-[#d63070] to-primary/80"
+        className="relative overflow-hidden min-h-[480px] flex items-center bg-zinc-950 py-24 md:py-32"
       >
-        {/* Decorative blobs */}
-        <div aria-hidden="true" className="absolute -top-16 -left-16 w-64 h-64 rounded-full bg-white/5 blur-3xl" />
-        <div aria-hidden="true" className="absolute -bottom-16 right-1/3 w-80 h-80 rounded-full bg-black/10 blur-3xl" />
-        <div aria-hidden="true" className="absolute top-0 left-1/2 w-px h-full bg-white/10" />
+        {/* Background Images Collage (Blended) */}
+        <div className="absolute inset-0 z-0 grid grid-cols-2 md:grid-cols-4 gap-0 opacity-40">
+          <div className="relative w-full h-full">
+            <Image
+              src="/images/banner-collage-1.jpg"
+              alt="Handmade slippers showcase"
+              fill
+              className="object-cover object-center"
+              sizes="(max-width: 768px) 50vw, 25vw"
+            />
+          </div>
+          <div className="relative w-full h-full">
+            <Image
+              src="/images/banner-collage-2.png"
+              alt="Handmade slippers showcase"
+              fill
+              className="object-cover object-center"
+              sizes="(max-width: 768px) 50vw, 25vw"
+            />
+          </div>
+          <div className="relative w-full h-full">
+            <Image
+              src="/images/banner-collage-3.jpg"
+              alt="Handmade slippers showcase"
+              fill
+              className="object-cover object-center"
+              sizes="(max-width: 768px) 50vw, 25vw"
+            />
+          </div>
+          <div className="relative w-full h-full">
+            <Image
+              src="/images/banner-collage-4.jpg"
+              alt="Handmade slippers showcase"
+              fill
+              className="object-cover object-center"
+              sizes="(max-width: 768px) 50vw, 25vw"
+            />
+          </div>
+        </div>
 
-        <div className="container mx-auto px-4 relative">
-          <div className="flex flex-col md:flex-row items-center gap-0">
-            {/* Text content */}
-            <div className="flex-1 py-12 md:py-16 text-center md:text-left">
-              <span className="inline-block text-white/80 text-xs font-bold uppercase tracking-[0.25em] mb-3">
-                ✨ Limited Time Offer
-              </span>
-              <h2
-                className="font-serif text-3xl md:text-5xl font-bold text-white leading-tight mb-4"
-                style={{ fontFamily: 'var(--font-serif)' }}
+        {/* Dark gradient overlay for text readability */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/70 to-black/40 md:bg-gradient-to-r md:from-black/85 md:via-black/55 md:to-transparent z-10" />
+
+        <div className="container mx-auto px-6 md:px-16 relative z-20">
+          <div className="max-w-xl text-center md:text-left">
+            <span className="inline-block text-white/80 text-xs font-bold uppercase tracking-[0.25em] mb-3">
+              ✨ Limited Time Offer
+            </span>
+            <h2
+              className="font-serif text-3xl md:text-5xl font-bold text-white leading-tight mb-4"
+              style={{ fontFamily: 'var(--font-serif)' }}
+            >
+              New Collection
+              <br />
+              <span className="text-yellow-200">Now Available</span>
+            </h2>
+            <p className="text-white/80 text-sm md:text-base max-w-sm mx-auto md:mx-0 mb-8 leading-relaxed">
+              Handcrafted with love — explore our freshest designs before they sell out. Island-wide delivery available.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-3 justify-center md:justify-start">
+              <Link
+                href="/shop?sort=newest"
+                className="inline-flex items-center justify-center gap-2 px-8 py-3.5 bg-white text-primary rounded-xl font-bold text-sm hover:bg-yellow-50 transition-all hover:shadow-xl hover:-translate-y-0.5"
               >
-                New Collection
-                <br />
-                <span className="text-yellow-200">Now Available</span>
-              </h2>
-              <p className="text-white/80 text-sm md:text-base max-w-sm mx-auto md:mx-0 mb-8 leading-relaxed">
-                Handcrafted with love — explore our freshest designs before they sell out. Island-wide delivery available.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-3 justify-center md:justify-start">
-                <Link
-                  href="/shop?sort=newest"
-                  className="inline-flex items-center justify-center gap-2 px-8 py-3.5 bg-white text-primary rounded-xl font-bold text-sm hover:bg-yellow-50 transition-all hover:shadow-xl hover:-translate-y-0.5"
-                >
-                  Shop New Arrivals <ArrowRight size={16} aria-hidden="true" />
-                </Link>
-                <Link
-                  href="/shop"
-                  className="inline-flex items-center justify-center gap-2 px-8 py-3.5 border-2 border-white/40 text-white rounded-xl font-semibold text-sm hover:border-white hover:bg-white/10 transition-all"
-                >
-                  Browse All
-                </Link>
-              </div>
-            </div>
-
-            {/* Decorative product image */}
-            <div className="hidden md:block relative w-72 h-80 shrink-0 self-end">
-              <Image
-                src="/images/pink-sandals.png"
-                alt="New collection — pink handmade slippers by Hush Crafts"
-                fill
-                className="object-contain object-bottom drop-shadow-2xl"
-                sizes="288px"
-              />
+                Shop New Arrivals <ArrowRight size={16} aria-hidden="true" />
+              </Link>
             </div>
           </div>
         </div>

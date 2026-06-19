@@ -9,7 +9,7 @@ import {
 import { useAdminAuthStore } from '@/store/adminAuthStore';
 import {
   ShieldAlert, Plus, Loader2, CheckCircle2,
-  Pencil, Trash2, X, Tag, Image as ImageIcon
+  Pencil, Trash2, X, Tag, Image as ImageIcon, Camera
 } from '@/components/MaterialIcons';
 import Image from 'next/image';
 
@@ -56,6 +56,7 @@ export default function AdminCategoriesPage() {
   const [deleting, setDeleting] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+  const [uploadingImage, setUploadingImage] = useState(false);
 
   // Form state
   const [form, setForm] = useState<CategoryForm>(emptyForm);
@@ -137,6 +138,34 @@ export default function AdminCategoriesPage() {
     setForm(emptyForm);
     setError(null);
   }
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setUploadingImage(true);
+    setError(null);
+    const formData = new FormData();
+    formData.append('file', file);
+
+    try {
+      const res = await fetch('/api/upload', {
+        method: 'POST',
+        body: formData
+      });
+      const data = await res.json();
+      if (data.url) {
+        setForm(prev => ({ ...prev, image: data.url }));
+      } else {
+        setError(data.error || 'Image upload failed');
+      }
+    } catch (err) {
+      console.error('Image upload error:', err);
+      setError('Failed to upload image.');
+    } finally {
+      setUploadingImage(false);
+    }
+  };
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -330,33 +359,55 @@ export default function AdminCategoriesPage() {
                 />
               </div>
 
-              {/* Image URL */}
+              {/* Category Image Upload */}
               <div>
-                <label className="block text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-1.5">
-                  Image URL
+                <label className="block text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-2">
+                  Category Image
                 </label>
-                <input
-                  type="url"
-                  value={form.image}
-                  onChange={e => setForm(prev => ({ ...prev, image: e.target.value }))}
-                  placeholder="https://firebasestorage.googleapis.com/..."
-                  className="w-full px-4 py-2.5 border border-border rounded-xl text-sm bg-background focus:outline-none focus:border-primary transition-colors"
-                />
-                {form.image && (
-                  <div className="mt-2 flex items-center gap-2">
-                    <div className="relative w-14 h-14 rounded-full overflow-hidden border border-border">
+                
+                <div className="flex items-center gap-4">
+                  {form.image ? (
+                    <div className="relative w-20 h-20 rounded-2xl border border-border overflow-hidden bg-secondary">
                       <Image
                         src={form.image}
-                        alt="Category image preview"
+                        alt="Category image"
                         fill
                         className="object-cover"
-                        sizes="56px"
-                        onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+                        sizes="80px"
                       />
+                      <button
+                        type="button"
+                        onClick={() => setForm(prev => ({ ...prev, image: '' }))}
+                        className="absolute top-1 right-1 w-5 h-5 rounded-full bg-red-500 text-white flex items-center justify-center font-bold text-[9px] cursor-pointer shadow-md border border-white/10"
+                      >
+                        ✕
+                      </button>
                     </div>
-                    <span className="text-[10px] text-muted-foreground">Image preview</span>
+                  ) : (
+                    <label className="w-20 h-20 rounded-2xl border-2 border-dashed border-border flex flex-col items-center justify-center gap-1 hover:border-primary transition-colors cursor-pointer bg-card/30 shrink-0">
+                      {uploadingImage ? (
+                        <Loader2 size={18} className="text-primary animate-spin" />
+                      ) : (
+                        <>
+                          <Camera size={18} className="text-muted-foreground" />
+                          <span className="text-[8px] font-bold text-muted-foreground uppercase">Upload</span>
+                        </>
+                      )}
+                      <input
+                        type="file"
+                        accept="image/*"
+                        disabled={uploadingImage}
+                        onChange={handleImageUpload}
+                        className="hidden"
+                      />
+                    </label>
+                  )}
+                  
+                  <div className="text-xs text-muted-foreground">
+                    <p className="font-semibold text-foreground">Upload category image</p>
+                    <p className="mt-0.5">Supports JPG, PNG or WEBP. Max size 5MB.</p>
                   </div>
-                )}
+                </div>
               </div>
 
               {/* Product Count */}

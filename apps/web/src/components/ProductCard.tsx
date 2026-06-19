@@ -87,6 +87,11 @@ export default function ProductCard({ product }: ProductCardProps) {
                 Featured
               </span>
             )}
+            {product.isNewArrival && (
+              <span className="px-2.5 py-1 bg-emerald-500 text-white text-[10px] font-bold rounded-sm uppercase tracking-wider shadow-md border border-white/20">
+                New
+              </span>
+            )}
           </div>
 
           {/* Wishlist */}

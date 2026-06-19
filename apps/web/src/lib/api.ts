@@ -45,6 +45,7 @@ export interface Product {
   status: 'published' | 'draft' | 'archived';
   isBestSeller: boolean;
   isFeatured: boolean;
+  isNewArrival: boolean;
   totalSold: number;
   averageRating: number;
   reviewCount: number;
@@ -76,6 +77,7 @@ function mapDocToProduct(docSnap: QueryDocumentSnapshot<DocumentData>): Product 
     status: data.status || 'published',
     isBestSeller: data.isBestSeller || false,
     isFeatured: data.isFeatured || false,
+    isNewArrival: data.isNewArrival || false,
     totalSold: data.totalSold || 0,
     averageRating: data.averageRating || 0,
     reviewCount: data.reviewCount || 0,
@@ -116,17 +118,28 @@ export async function getFeaturedProducts() {
       limit(12)
     );
 
-    // New arrivals (using simple limit for now, ideally ordered by createdAt)
+    // New arrivals (using isNewArrival flag)
     const newArrivalsQuery = query(
       collection(db, 'products'),
       where('status', '==', 'published'),
+      where('isNewArrival', '==', true),
       limit(8)
     );
 
-    const [hotSnap, newSnap] = await Promise.all([
+    const [hotSnap, newSnapOriginal] = await Promise.all([
       getDocs(hotItemsQuery),
       getDocs(newArrivalsQuery)
     ]);
+
+    let newSnap = newSnapOriginal;
+    if (newSnap.empty) {
+      const fallbackQuery = query(
+        collection(db, 'products'),
+        where('status', '==', 'published'),
+        limit(8)
+      );
+      newSnap = await getDocs(fallbackQuery);
+    }
 
     return {
       success: true as const,

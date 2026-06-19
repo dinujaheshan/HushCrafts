@@ -13,7 +13,8 @@
     "build:web": "npm run build --workspace=apps/web",
     "start:web": "npm run start --workspace=apps/web",
     "deploy:functions": "firebase deploy --only functions",
-    "emulators": "firebase emulators:start"
+    "emulators": "firebase emulators:start",
+    "copy-images": "node copy-images.js"
   },
   "dependencies": {
     "firebase": "^12.14.0"

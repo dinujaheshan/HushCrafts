@@ -56,6 +56,7 @@ export default function AdminProductsPage() {
   const [formStatus, setFormStatus] = useState<'published' | 'draft' | 'archived'>('published');
   const [formIsFeatured, setFormIsFeatured] = useState(false);
   const [formIsBestSeller, setFormIsBestSeller] = useState(false);
+  const [formIsNewArrival, setFormIsNewArrival] = useState(false);
   const [formImages, setFormImages] = useState<string[]>([]);
   const [formSizes, setFormSizes] = useState<string[]>(['36', '37', '38']);
   const [variantSettings, setVariantSettings] = useState<Record<string, { quantity: number; threshold: number }>>({});
@@ -106,6 +107,7 @@ export default function AdminProductsPage() {
     setFormStatus('published');
     setFormIsFeatured(false);
     setFormIsBestSeller(false);
+    setFormIsNewArrival(false);
     setFormImages([]);
     setFormSizes(['36', '37', '38']);
     setVariantSettings({
@@ -127,6 +129,7 @@ export default function AdminProductsPage() {
     setFormStatus(p.status || 'published');
     setFormIsFeatured(p.isFeatured || false);
     setFormIsBestSeller(p.isBestSeller || false);
+    setFormIsNewArrival(p.isNewArrival || false);
     setFormImages(p.images || []);
     const sizes = p.variants?.map((v: any) => v.attributes.size) || ['36', '37', '38'];
     setFormSizes(sizes);
@@ -293,6 +296,7 @@ export default function AdminProductsPage() {
       status: formStatus,
       isFeatured: formIsFeatured,
       isBestSeller: formIsBestSeller,
+      isNewArrival: formIsNewArrival,
       seo: editingProduct?.seo || { title: formName, description: formSummary, keywords: [] },
       variants: generatedVariants,
       averageRating: editingProduct?.averageRating || 5.0,
@@ -500,6 +504,11 @@ export default function AdminProductsPage() {
                                 Featured
                               </span>
                             )}
+                            {product.isNewArrival && (
+                              <span className="text-[9px] bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 px-1.5 py-0.5 rounded font-bold uppercase">
+                                New Arrival
+                              </span>
+                            )}
                           </div>
                         </div>
                       </div>
@@ -694,6 +703,15 @@ export default function AdminProductsPage() {
                       className="w-4 h-4 border-2 border-muted-foreground rounded text-primary focus:ring-primary focus:ring-offset-background transition-colors cursor-pointer"
                     />
                     Best Seller Slipper
+                  </label>
+                  <label className="flex items-center gap-2 cursor-pointer text-xs font-bold text-slate-600 dark:text-slate-300">
+                    <input
+                      type="checkbox"
+                      checked={formIsNewArrival}
+                      onChange={e => setFormIsNewArrival(e.target.checked)}
+                      className="w-4 h-4 border-2 border-muted-foreground rounded text-primary focus:ring-primary focus:ring-offset-background transition-colors cursor-pointer"
+                    />
+                    New Arrival Slipper
                   </label>
                 </div>
               </div>

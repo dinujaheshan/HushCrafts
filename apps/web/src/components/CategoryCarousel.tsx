@@ -35,7 +35,7 @@ export default function CategoryCarousel({ categories }: CategoryCarouselProps) 
       {/* Scrollable row */}
       <div
         ref={scrollRef}
-        className="flex gap-6 md:gap-8 overflow-x-auto scrollbar-none px-4 md:px-16 pb-2 pt-1"
+        className="flex gap-6 md:gap-8 overflow-x-auto scrollbar-none justify-start md:justify-center px-4 md:px-16 pb-2 pt-1"
         style={{ scrollSnapType: 'x mandatory' }}
         role="list"
         aria-label="Product categories"
